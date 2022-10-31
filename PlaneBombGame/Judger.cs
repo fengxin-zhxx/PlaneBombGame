@@ -40,5 +40,16 @@ namespace PlaneBombGame
             //MessageBox.Show(msg);
             return MISS;  
         }
+
+        public static bool JudgeLegalPlanePlacement(Player player, int x, int y, int diraction)
+        {
+            return true;
+        }
+        public static bool JudgeLegalPlacement(Player player, int x, int y)
+        {
+            /*TO DO*/
+            return true;
+        }
+    
     }
 }

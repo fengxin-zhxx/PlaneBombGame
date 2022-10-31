@@ -15,12 +15,6 @@ namespace PlaneBombGame
     {
         private bool start;     // 游戏是否开始
 
-        private bool ChessCheck = true;     // 白子黑子回合
-
-        private const int size = 11;     // 棋盘大小
-
-        private int[,] CheckBoard = new int[size, size];     // 棋盘点位数组
-
         private int LeftCount; // 已经放置的飞机数
 
         private LocalPlayer localPlayer;
@@ -32,8 +26,7 @@ namespace PlaneBombGame
 
         private void button1_Click(object sender, EventArgs e)
         {
-            start = true;                             
-            ChessCheck = true;                        
+            start = true;                            
             label1.Text = "放置你的飞机";
             panel1.Invalidate();
             panel3.Invalidate();
@@ -46,13 +39,6 @@ namespace PlaneBombGame
             localPlayer =  new LocalPlayer();
             LeftCount = 0; 
 
-            for (int i = 0; i < size; i++)
-            {
-                for (int j = 0; j < size; j++)
-                {
-                    CheckBoard[i, j] = 0;
-                }
-            }
             start = false; 
             label1.Text = "WelCome To Plane Bombbbb!!!";
 
@@ -100,13 +86,18 @@ namespace PlaneBombGame
                     return;
                 }
 
-                if (e.Y < StandardSize.toTop || e.X < StandardSize.toLeft || e.Y >= StandardSize.toTop + 660 || e.X >= StandardSize.toLeft + 660) return;
+                if (e.Y < StandardSize.toTop || e.X < StandardSize.toLeft || e.Y >= StandardSize.toTop + (StandardSize.BlockNum +1) * StandardSize.BlockWidth || e.X >= StandardSize.toLeft + (StandardSize.BlockNum + 1) * StandardSize.BlockWidth) return;
                 int PlacementX = (e.X - StandardSize.toLeft) / StandardSize.BlockWidth;      // 求鼠标点击的X方向的第几个点位
                 int PlacementY = (e.Y - StandardSize.toTop)  / StandardSize.BlockWidth;      // 求鼠标点击的Y方向的第几个点位
 
                 try
                 {
                     // TODO 判断此位置是否可以放置 (不可以重叠)
+                    if (!Judger.JudgeLegalPlanePlacement(AdversaryPlayer, PlacementX, PlacementY, 0))
+                    {
+                        MessageBox.Show("位置不合法, 请重新放置", "提示");
+                        return;
+                    }
                     localPlayer.AddPlane(new Plane(PlacementX, PlacementY, 0));
                     new Plane(PlacementX, PlacementY,0).Draw(panel3);  // 画飞机
                     LeftCount++;
@@ -117,7 +108,6 @@ namespace PlaneBombGame
                         MessageBox.Show("按确认开始对战", "提示");
                         label1.Text = "点击右侧方格以攻击对手";
                     }
-
                 }
                 catch (Exception) { }                            // 防止鼠标点击边界，导致数组越界
 
@@ -149,6 +139,11 @@ namespace PlaneBombGame
                 try
                 {
                     // TODO 判断此位置是否可以放置 (不可以和之前的重复)
+                    if(!Judger.JudgeLegalPlacement(AdversaryPlayer, PlacementX, PlacementY))
+                    {
+                        MessageBox.Show("位置不合法, 请重新放置", "提示");
+                        return;
+                    }
                     attackRes = Judger.JudgeAttack(AdversaryPlayer, PlacementX, PlacementY);
                     color = attackRes == "HIT" ? Color.Green : (attackRes == "KILL" ? Color.Red : Color.Gray);
                     new AttackPoint(PlacementX, PlacementY).Draw(panel4, color);  

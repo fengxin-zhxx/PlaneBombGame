@@ -16,6 +16,7 @@ namespace PlaneBombGame
         public static int BoardHeight { get { return 901; } }
 
         // 格子宽度
+        public static int BlockNum { get { return 10; } }
         public static int BlockWidth { get { return 60; } }
 
 
