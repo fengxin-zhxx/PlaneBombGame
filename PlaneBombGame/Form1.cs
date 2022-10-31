@@ -32,12 +32,12 @@ namespace PlaneBombGame
             panel3.Invalidate();
             panel4.Invalidate();
             LeftCount = 0;
+            AdversaryPlayer = new VirtualPlayer();
+            localPlayer = new LocalPlayer();
+            LeftCount = 0;
         }
         private void initialize()
         {
-            AdversaryPlayer = new VirtualPlayer();
-            localPlayer =  new LocalPlayer();
-            LeftCount = 0; 
 
             start = false; 
             label1.Text = "WelCome To Plane Bombbbb!!!";

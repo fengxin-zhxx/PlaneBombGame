@@ -15,7 +15,6 @@ namespace PlaneBombGame
         static string KILL = "KILL";
         public static string JudgeAttack(Player player, int x, int y)
         {
-            ArrayList al = player.GetAttackHistory();
             Plane[] planes = player.GetPlanes();
             string msg = "ATTACK AT:" + x + " "+ y + "\n";
             for(int i = 0; i < planes.Length; i++)
