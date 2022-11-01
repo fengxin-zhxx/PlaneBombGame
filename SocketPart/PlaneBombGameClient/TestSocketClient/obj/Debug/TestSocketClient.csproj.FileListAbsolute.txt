@@ -1,0 +1,11 @@
+D:\VSPROJECT\TestSocketClient\TestSocketClient\bin\Debug\TestSocketClient.exe.config
+D:\VSPROJECT\TestSocketClient\TestSocketClient\bin\Debug\TestSocketClient.exe
+D:\VSPROJECT\TestSocketClient\TestSocketClient\bin\Debug\TestSocketClient.pdb
+D:\VSPROJECT\TestSocketClient\TestSocketClient\obj\Debug\TestSocketClient.csproj.AssemblyReference.cache
+D:\VSPROJECT\TestSocketClient\TestSocketClient\obj\Debug\TestSocketClient.csproj.SuggestedBindingRedirects.cache
+D:\VSPROJECT\TestSocketClient\TestSocketClient\obj\Debug\TestSocketClient.Form1.resources
+D:\VSPROJECT\TestSocketClient\TestSocketClient\obj\Debug\TestSocketClient.Properties.Resources.resources
+D:\VSPROJECT\TestSocketClient\TestSocketClient\obj\Debug\TestSocketClient.csproj.GenerateResource.cache
+D:\VSPROJECT\TestSocketClient\TestSocketClient\obj\Debug\TestSocketClient.csproj.CoreCompileInputs.cache
+D:\VSPROJECT\TestSocketClient\TestSocketClient\obj\Debug\TestSocketClient.exe
+D:\VSPROJECT\TestSocketClient\TestSocketClient\obj\Debug\TestSocketClient.pdb
