@@ -4,13 +4,15 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace PlaneBombGame
 {
     internal class PlayingBoard
     {
-        public static void DrawCB(Graphics g)  //传入画布对象
+        public static void DrawCB(Panel panel)  //传入画布对象
         {
+            Graphics g = panel.CreateGraphics();      // 创建面板画布
             int BlockWidth = StandardSize.BlockWidth;                   // 格子宽度
             int BlockNum = StandardSize.BoardWidth / BlockWidth - 1;    // 地图格子数量
 

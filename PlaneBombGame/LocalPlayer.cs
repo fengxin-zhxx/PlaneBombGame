@@ -10,10 +10,10 @@ namespace PlaneBombGame
     internal class LocalPlayer : Player
     {
         Plane[] planes { get; set; }
-        ArrayList al = new ArrayList();
+        ArrayList attackHistory = new ArrayList();
         public ArrayList GetAttackHistory()
         {
-            return al;
+            return attackHistory;
         }
 
         public Plane[] GetPlanes()
@@ -30,7 +30,7 @@ namespace PlaneBombGame
 
         }
 
-        public int[] NextAttack()
+        public AttackPoint NextAttack()
         {
             throw new NotImplementedException();
         }
@@ -52,9 +52,9 @@ namespace PlaneBombGame
             throw new NotImplementedException();
         }
 
-        public ArrayList GetResultHistory()
+        public void AddAttackPoint(AttackPoint attackPoint)
         {
-            throw new NotImplementedException();
+            attackHistory.Add(attackPoint); 
         }
     }
 }

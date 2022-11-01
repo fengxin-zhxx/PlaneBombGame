@@ -9,6 +9,7 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.AxHost;
 
 namespace PlaneBombGame
 {
@@ -56,23 +57,27 @@ namespace PlaneBombGame
         }
         private void Form1_Load(object sender, EventArgs e)
         {
-            initialize();                      // 调用初始化游戏
-            this.Width = StandardSize.FormWidth;       // 设置窗口宽度
-            this.Height = StandardSize.FormHeight;     // 设置窗口高度
-            this.Location = new Point(400, 75);     // 设置窗口位置
+            initialize();                      
+            this.Width = StandardSize.FormWidth;       
+            this.Height = StandardSize.FormHeight;     
+            this.Location = new Point(400, 75);   
         }
-
+        private void ReDraw()
+        {
+            state.DrawPlane(panel3);
+            state.DrawPoint(state.GetLocalPlayer(), state.GetAdversaryPlayer(), panel4);
+            state.DrawPoint(state.GetAdversaryPlayer(), state.GetLocalPlayer(), panel3);
+        }
         private void panel3_Paint(object sender, PaintEventArgs e)
         {
-            Graphics g = panel3.CreateGraphics();      // 创建面板画布
-            PlayingBoard.DrawCB(g);
+            PlayingBoard.DrawCB(panel3);
+            if(state != null) ReDraw();
         }
 
         private void panel4_Paint(object sender, PaintEventArgs e)
         {
-
-            Graphics g = panel4.CreateGraphics();      // 创建面板画布
-            PlayingBoard.DrawCB(g);
+            PlayingBoard.DrawCB(panel4);
+            if(state != null) ReDraw();
         }
 
         private void panel3_MouseDown(object sender, MouseEventArgs e)
@@ -90,22 +95,20 @@ namespace PlaneBombGame
                 }
                 return;
             }
-            // 判断游戏是否开始
             if (start)
             {
 
-                if(state.GetLeftCount() >= 3)
-                {
-                    return;
-                }
+                if(state.GetLeftCount() >= 3) return;
                 if (!Judger.JudgeLegalMouseDown(e)) return;
+
+
                 int PlacementX = (e.X - StandardSize.toLeft) / StandardSize.BlockWidth;      // 求鼠标点击的X方向的第几个点位
                 int PlacementY = (e.Y - StandardSize.toTop)  / StandardSize.BlockWidth;      // 求鼠标点击的Y方向的第几个点位
 
                 try
                 {
                     Plane plane = new Plane(PlacementX, PlacementY, nowDir);
-                    // TODO 判断此位置是否可以放置 (不可以重叠)
+
                     if (!Judger.JudgeLegalPlanePlacement(state.GetLocalPlayer().GetPlanes(), plane))
                     {
                         MessageBox.Show("位置不合法, 请重新放置", "提示");
@@ -114,27 +117,28 @@ namespace PlaneBombGame
                     MessageBox.Show("X=" + PlacementX + " Y=" + PlacementY + " DIR=" + nowDir);
 
                     state.GetLocalPlayer().SetOnePlane(plane,state.GetLeftCount());
-                    state.Draw(panel3); 
+                    state.DrawPlane(panel3); 
                     state.SetLeftCount(state.GetLeftCount() + 1);
                     if(state.GetLeftCount() == 3)
                     {
                         state.GetAdversaryPlayer().SetPlanes();
+                        /*TO DO 对于SocketPlayer的SetPlanes方法实现*/
                         MessageBox.Show("按确认开始对战", "提示");
                         label1.Text = "点击右侧方格以攻击对手";
                     }
+
                 }
-                catch (Exception) { }                            // 防止鼠标点击边界，导致数组越界
+                catch (Exception) { } // 防止崩溃
 
             }
             else
             {
-                MessageBox.Show("请先开始游戏！", "提示");      // 提示开始游戏
+                MessageBox.Show("请先开始游戏！", "提示");
             }
         }
 
         private void panel4_MouseDown(object sender, MouseEventArgs e)
         {
-            // 判断游戏是否开始
             if (start)
             {
 
@@ -149,33 +153,38 @@ namespace PlaneBombGame
 
                 int PlacementX = (e.X - StandardSize.toLeft) / StandardSize.BlockWidth;      // 求鼠标点击的X方向的第几个点位
                 int PlacementY = (e.Y - StandardSize.toTop) / StandardSize.BlockWidth;      // 求鼠标点击的Y方向的第几个点位
-                string attackRes;
-                Color color;
+
+
                 try
                 {
-                    // TODO 判断此位置是否可以放置 (不可以和之前的重复)
                     if(!Judger.JudgeLegalPlacement(state.GetAdversaryPlayer(), PlacementX, PlacementY))
                     {
                         MessageBox.Show("位置不合法, 请重新放置", "提示");
                         return;
                     }
-                    attackRes = Judger.JudgeAttack(state.GetAdversaryPlayer(), PlacementX, PlacementY);
-                    color = attackRes == "HIT" ? Color.Green : (attackRes == "KILL" ? Color.Red : Color.Gray);
-                    new AttackPoint(PlacementX, PlacementY).Draw(panel4, color);
-                
 
-                    int[] res = state.GetAdversaryPlayer().NextAttack();
-                    attackRes = Judger.JudgeAttack(state.GetLocalPlayer(), res[0], res[1]);
-                    color = attackRes == "HIT" ? Color.Green : (attackRes == "KILL" ? Color.Red : Color.Gray);
-                    MessageBox.Show(res[0] + " " + res[1],"对方落子");
-                    new AttackPoint(res[0], res[1]).Draw(panel3,color);
+                    AttackPoint attackPoint = new AttackPoint(PlacementX, PlacementY);
+                    // 用**对手**的Planes判断当前攻击结果 
+
+
+                    state.GetLocalPlayer().AddAttackPoint(attackPoint); // 新的攻击点加入历史记录
+                    state.DrawPoint(state.GetLocalPlayer(), state.GetAdversaryPlayer(), panel4);
+
+                    AttackPoint adversaryAttackPoint= state.GetAdversaryPlayer().NextAttack();
+                    //获取对手攻击点
+                    /*TO DO 对于SocketPlayer的NextAttack方法实现*/
+
+                    //MessageBox.Show(adversaryAttackPoint.x + " " + adversaryAttackPoint.y, "对方落子");
+                    state.GetAdversaryPlayer().AddAttackPoint(adversaryAttackPoint);
+                    state.DrawPoint(state.GetAdversaryPlayer(), state.GetLocalPlayer(), panel3);
+
                 }
-                catch (Exception) { }                            // 防止鼠标点击边界，导致数组越界
+                catch (Exception) { } 
 
             }
             else
             {
-                MessageBox.Show("请先开始游戏！", "提示");      // 提示开始游戏
+                MessageBox.Show("请先开始游戏！", "提示");  
             }
         }
     }

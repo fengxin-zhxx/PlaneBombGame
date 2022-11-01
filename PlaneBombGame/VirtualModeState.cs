@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -18,13 +19,39 @@ namespace PlaneBombGame
 
         private Player adversaryPlayer;
 
-        public void Draw(Panel panel)
+        public void AddLeftCount()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DrawPlane(Panel panel)
         {
             Plane[] planes = localPlayer.GetPlanes();
             foreach(Plane plane in planes)
             {
                 if(plane != null)   
                     plane.Draw(panel);
+            }
+
+        }
+
+        public void DrawPoint(Player player, Player adversaryPlayer, Panel panel)
+        {
+            foreach(AttackPoint a in player.GetAttackHistory())
+            {
+                string attackRes = Judger.JudgeAttack(adversaryPlayer, a);
+                switch (attackRes)
+                {
+                    case "HIT":
+                        a.Draw(panel, Color.Green);
+                        break;
+                    case "KILL":
+                        a.Draw(panel, Color.Red);
+                        break;
+                    case "MISS":
+                        a.Draw(panel, Color.Gray);
+                        break;
+                }
             }
         }
 

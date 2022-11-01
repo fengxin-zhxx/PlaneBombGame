@@ -11,16 +11,15 @@ namespace PlaneBombGame
     {
 
         Plane[] planes { get; set; }
-        ArrayList al = new ArrayList();
+
+        ArrayList attackHistory = new ArrayList();
+
         Random r = new Random(); // 以当前时间为随机数种子
 
 
-        public int[] NextAttack()
+        public AttackPoint NextAttack()
         {
-            int[] res = new int[2];
-            res[0] = r.Next(1,10);
-            res[1] = r.Next(1,10);
-            return res;
+            return new AttackPoint(r.Next(1, 10), r.Next(1, 10));
         }
 
         public Plane[] GeneratePlanes()
@@ -53,7 +52,7 @@ namespace PlaneBombGame
 
         public ArrayList GetAttackHistory()
         {
-            return al;
+            return attackHistory;
         }
 
         public void SetPlanes()
@@ -61,9 +60,9 @@ namespace PlaneBombGame
             this.planes = GeneratePlanes();
         }
 
-        public ArrayList GetResultHistory()
+        public void AddAttackPoint(AttackPoint attackPoint)
         {
-            throw new NotImplementedException();
+            attackHistory.Add(attackPoint);
         }
     }
 }

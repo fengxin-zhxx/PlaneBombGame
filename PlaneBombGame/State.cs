@@ -14,10 +14,19 @@ namespace PlaneBombGame
         void SetLeftCount(int leftCount);
         int GetLeftCount();
 
+        void AddLeftCount();
+
         void SetAdversaryPlayer(Player player);
         Player GetAdversaryPlayer();
         void SetLocalPlayer(LocalPlayer player);
         LocalPlayer GetLocalPlayer();
-        void Draw(Panel panel); // 绘画LocalPlayer放置的飞机
+
+
+
+        void DrawPlane(Panel panel);  // 绘画LocalPlayer放置的飞机
+        
+        void DrawPoint(Player player, Player adversaryPlayer, Panel panel);
+        //绘画player的攻击点, 以adversaryPlayer的Planes为结果判断依据
+
     }
 }

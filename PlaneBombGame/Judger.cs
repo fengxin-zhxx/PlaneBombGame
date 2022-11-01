@@ -15,8 +15,10 @@ namespace PlaneBombGame
         static string HIT = "HIT";
         static string MISS = "MISS";
         static string KILL = "KILL";
-        public static string JudgeAttack(Player player, int x, int y)
+        public static string JudgeAttack(Player player, AttackPoint attackPoint)
         {
+            int x = attackPoint.x;
+            int y = attackPoint.y;
             Plane[] planes = player.GetPlanes();
             string msg = "ATTACK AT:" + x + " "+ y + "\n";
             for(int i = 0; i < planes.Length; i++)

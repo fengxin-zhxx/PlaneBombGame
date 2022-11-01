@@ -14,7 +14,7 @@ namespace PlaneBombGame
             throw new NotImplementedException();
         }
 
-        public int[] NextAttack()
+        public AttackPoint NextAttack()
         {
             throw new NotImplementedException();
             /* TO DO*/
@@ -39,7 +39,7 @@ namespace PlaneBombGame
             throw new NotImplementedException();
         }
 
-        public ArrayList GetResultHistory()
+        public void AddAttackPoint(AttackPoint attackPoint)
         {
             throw new NotImplementedException();
         }
