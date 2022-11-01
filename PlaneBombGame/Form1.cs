@@ -154,7 +154,6 @@ namespace PlaneBombGame
                 int PlacementX = (e.X - StandardSize.toLeft) / StandardSize.BlockWidth;      // 求鼠标点击的X方向的第几个点位
                 int PlacementY = (e.Y - StandardSize.toTop) / StandardSize.BlockWidth;      // 求鼠标点击的Y方向的第几个点位
 
-
                 try
                 {
                     if(!Judger.JudgeLegalPlacement(state.GetAdversaryPlayer(), PlacementX, PlacementY))
