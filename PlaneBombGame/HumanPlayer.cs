@@ -20,7 +20,7 @@ namespace PlaneBombGame
             /* TO DO*/
         }
 
-        public void SetPlanes(Plane[] planes)
+        public void SetAllPlanes(Plane[] planes)
         {
             throw new NotImplementedException();
         }
@@ -30,6 +30,16 @@ namespace PlaneBombGame
             throw new NotImplementedException();
         }
         public void Init()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetPlanes()
+        {
+            throw new NotImplementedException();
+        }
+
+        public ArrayList GetResultHistory()
         {
             throw new NotImplementedException();
         }

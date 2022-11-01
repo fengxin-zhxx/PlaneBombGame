@@ -49,9 +49,14 @@ namespace PlaneBombGame
             return al;
         }
 
-        public void SetPlanes(Plane[] planes)
+        public void SetPlanes()
         {
-             this.planes = GeneratePlanes();
+            this.planes = GeneratePlanes();
+        }
+
+        public ArrayList GetResultHistory()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -13,10 +13,18 @@ namespace PlaneBombGame
         void Init();
         int[] NextAttack();
 
+
         Plane[] GetPlanes();
-        void SetPlanes(Plane[] planes);
+
+
+
+        void SetPlanes(); 
+        // 对于VirtualPlayer: 生成对应的Planes
+        // 对于SocketPlayer:  接收对方放置的Planes
+
+
 
         ArrayList GetAttackHistory();
-
+        ArrayList GetResultHistory();
     }
 }

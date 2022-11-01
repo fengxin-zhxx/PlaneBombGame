@@ -9,7 +9,6 @@ namespace PlaneBombGame
 {
     internal class LocalPlayer : Player
     {
-        ArrayList PlanesTmp = new ArrayList();
         Plane[] planes { get; set; }
         ArrayList al = new ArrayList();
         public ArrayList GetAttackHistory()
@@ -19,6 +18,10 @@ namespace PlaneBombGame
 
         public Plane[] GetPlanes()
         {
+            if (planes == null)
+            {
+                planes = new Plane[3];
+            }
             return planes;
         }
 
@@ -32,18 +35,26 @@ namespace PlaneBombGame
             throw new NotImplementedException();
         }
 
-        public void SetPlanes(Plane[] planes)
+        public void SetOnePlane(Plane plane, int index)
         {
-            this.planes = planes;
+            if(planes == null)
+            {
+                planes = new Plane[3];
+                planes[0] = plane;
+                return;
+            }
+            
+            planes[index] = plane;
         }
-        public ArrayList GetPlaneTmp()
+
+        public void SetPlanes()
         {
-            return PlanesTmp;
+            throw new NotImplementedException();
         }
-        public void AddPlane(Plane plane)
+
+        public ArrayList GetResultHistory()
         {
-            PlanesTmp.Add(plane);
+            throw new NotImplementedException();
         }
-        
     }
 }

@@ -39,9 +39,36 @@ namespace PlaneBombGame
             //MessageBox.Show(msg);
             return MISS;  
         }
-
-        public static bool JudgeLegalPlanePlacement(Player player, int x, int y, int diraction)
+        public static bool JudgePlaneOverlap(Plane p1, Plane p2)
         {
+
+            return false;
+        }
+        public static bool JudgeLegalPlanePlacement(Player player, Plane plane)
+        {
+            if (plane == null) return false;
+            if (player == null) return false;
+            foreach(Plane playerPlane in player.GetPlanes())
+            {
+                if (Judger.JudgePlaneOverlap(plane, playerPlane))
+                {
+                    return false;
+                }
+            }
+            switch (plane.direction)
+            {
+                case 0:
+
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                default:
+                    break;
+            }
             return true;
         }
         public static bool JudgeLegalPlacement(Player player, int x, int y)
@@ -50,5 +77,14 @@ namespace PlaneBombGame
             return true;
         }
     
+        public static bool JudgeLegalMouseDown(MouseEventArgs e)
+        {
+            if (   e.Y < StandardSize.toTop 
+                || e.X < StandardSize.toLeft 
+                || e.Y >= StandardSize.toTop + (StandardSize.BlockNum + 1) * StandardSize.BlockWidth 
+                || e.X >= StandardSize.toLeft + (StandardSize.BlockNum + 1) * StandardSize.BlockWidth
+                ) return false;
+            return true;
+        }
     }
 }
