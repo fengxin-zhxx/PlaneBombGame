@@ -23,6 +23,7 @@ namespace PlaneBombGame
             this.direction = direction;
         }
 
+        //加入飞机方向判断
         public void Draw(Panel p)
         {
             Graphics g = p.CreateGraphics();                // 创建面板画布

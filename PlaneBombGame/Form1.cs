@@ -19,6 +19,7 @@ namespace PlaneBombGame
         bool start;
         int nowDir;
         string[] directions = { "→", "↓", "←", "↑" };
+        //飞机方向显示
         string label1Text = "放置你的飞机 按右键切换机头朝向 当前朝向：";
         public Form1()
         {
