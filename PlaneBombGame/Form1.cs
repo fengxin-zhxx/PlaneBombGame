@@ -17,7 +17,9 @@ namespace PlaneBombGame
 
         private State state;
         bool start;
-        
+        int nowDir;
+        string[] directions = { "→", "↓", "←", "↑" };
+        string label1Text = "放置你的飞机 按右键切换机头朝向 当前朝向：";
         public Form1()
         {
             InitializeComponent();
@@ -27,8 +29,9 @@ namespace PlaneBombGame
         {
             state  = new VirtualModeState();
             state.Init();
-
-            label1.Text = "放置你的飞机";           
+            nowDir = 0;
+            this.label1.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            label1.Text = label1Text + directions[nowDir];           
             panel1.Invalidate();
             panel3.Invalidate();
             panel4.Invalidate();
@@ -73,6 +76,19 @@ namespace PlaneBombGame
 
         private void panel3_MouseDown(object sender, MouseEventArgs e)
         {
+            if (e.Button == MouseButtons.Right)
+            {
+                if (start)
+                {
+                    nowDir = (nowDir + 1) % 4;
+                    label1.Text = label1Text + directions[nowDir];
+                }
+                else
+                {
+                    MessageBox.Show("右键:请先开始游戏！", "提示");      // 提示开始游戏
+                }
+                return;
+            }
             // 判断游戏是否开始
             if (start)
             {
@@ -87,13 +103,15 @@ namespace PlaneBombGame
 
                 try
                 {
-                    Plane plane = new Plane(PlacementX, PlacementY, 0);
+                    Plane plane = new Plane(PlacementX, PlacementY, nowDir);
                     // TODO 判断此位置是否可以放置 (不可以重叠)
-                    if (!Judger.JudgeLegalPlanePlacement(state.GetLocalPlayer(), plane))
+                    if (!Judger.JudgeLegalPlanePlacement(state.GetLocalPlayer().GetPlanes(), plane))
                     {
                         MessageBox.Show("位置不合法, 请重新放置", "提示");
                         return;
                     }
+                    MessageBox.Show("X=" + PlacementX + " Y=" + PlacementY + " DIR=" + nowDir);
+
                     state.GetLocalPlayer().SetOnePlane(plane,state.GetLeftCount());
                     state.Draw(panel3); 
                     state.SetLeftCount(state.GetLeftCount() + 1);

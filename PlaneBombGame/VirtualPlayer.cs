@@ -28,8 +28,15 @@ namespace PlaneBombGame
             Plane[] res = new Plane[3];
             for(int i = 0; i < 3; i++)
             {
-                res[i] = new Plane(r.Next(1, 10), r.Next(1, 10), 0);
+                Plane plane = new Plane(r.Next(2, 9), r.Next(2, 9), r.Next(0, 4));
+                if (!Judger.JudgeLegalPlanePlacement(res, plane))
+                {
+                    i--;
+                    continue;
+                }
+                res[i] = plane;
             }
+
             // TODO 
             return res;
         }

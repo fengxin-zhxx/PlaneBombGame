@@ -37,23 +37,41 @@ namespace PlaneBombGame
 
             int dx = StandardSize.BlockWidth;
             int dy = dx;
-            Rectangle rec1 = new Rectangle(AccurateX, AccurateY - 2 * dy, dx, 5 * dy);
-            Rectangle rec2 = new Rectangle(AccurateX - 2 * dx, AccurateY - dy, dx, 3 * dy);
-            Rectangle rec3 = new Rectangle(AccurateX - 2 * dx, AccurateY, 4 * dx, dy);
+            Rectangle[] recs = new Rectangle[12];
+            // 0
+            recs[0] = new Rectangle(AccurateX, AccurateY - 2 * dy, dx, 5 * dy);  //长横
+            recs[1] = new Rectangle(AccurateX - 2 * dx, AccurateY - dy, dx, 3 * dy); //短横
+            recs[2] = new Rectangle(AccurateX - 2 * dx, AccurateY, 4 * dx, dy); //一竖
+            // 1
+            recs[3] = new Rectangle(AccurateX - 2 * dx, AccurateY, 5 * dx, dy);
+            recs[4] = new Rectangle(AccurateX - dx, AccurateY - 2 * dy, 3 * dx, dy);
+            recs[5] = new Rectangle(AccurateX, AccurateY - 2 * dy, dx, 4 * dy);
+            // 2 
+            recs[6] = new Rectangle(AccurateX, AccurateY - 2 * dy, dx, 5 * dy);
+            recs[7] = new Rectangle(AccurateX + 2 * dx, AccurateY - dy, dx, 3 * dy);
+            recs[8] = new Rectangle(AccurateX - dx, AccurateY, 4 * dx, dy);
+            // 3
+            recs[9] = new Rectangle(AccurateX - 2 * dx, AccurateY, 5 * dx, dy);
+            recs[10] = new Rectangle(AccurateX - dx, AccurateY + 2 * dy, 3 * dx, dy);
+            recs[11] = new Rectangle(AccurateX, AccurateY - dy, dx, 4 * dy);
+
 
 
             Pen pen = new Pen(Color.Black);
-            g.DrawRectangle(pen, rec1);
-            g.DrawRectangle(pen, rec2);
-            g.DrawRectangle(pen, rec3);
-
+            for (int i = 0; i < 3; i++)
+            {
+                g.DrawRectangle(pen, recs[direction * 3 + i]);
+            }
+            //LinearGradientBrush brush=new LinearGradientBrush()
             SolidBrush brush = new SolidBrush(Color.Blue);
-            g.FillRectangle(brush, rec1);
-            g.FillRectangle(brush, rec2);
-            g.FillRectangle(brush, rec3);
+            for (int i = 0; i < 3; i++)
+            {
+                g.FillRectangle(brush, recs[direction * 3 + i]);
+            }
 
-            g.FillEllipse(new SolidBrush(Color.Blue), AccurateX, AccurateY, StandardSize.BlockWidth, StandardSize.BlockWidth);
+            //g.FillEllipse(new SolidBrush(Color.Blue), AccurateX, AccurateY, StandardSize.BlockWidth, StandardSize.BlockWidth);
         }
+
 
     }
 }
