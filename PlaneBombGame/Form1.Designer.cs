@@ -78,6 +78,7 @@
             this.button2.TabIndex = 3;
             this.button2.Text = "Socket对战";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button3
             // 
@@ -159,6 +160,7 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1484, 961);
             this.panel1.TabIndex = 0;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);

@@ -9,39 +9,33 @@ namespace PlaneBombGame
 {
     internal class HumanPlayer : Player
     {
-        public ArrayList GetAttackHistory()
-        {
-            throw new NotImplementedException();
-        }
+        Plane[] planes { get; set; }
 
-        public AttackPoint NextAttack()
-        {
-            throw new NotImplementedException();
-            /* TO DO*/
-        }
-
-        public void SetAllPlanes(Plane[] planes)
-        {
-            throw new NotImplementedException();
-        }
+        ArrayList attackHistory = new ArrayList();
 
         public Plane[] GetPlanes()
         {
-            throw new NotImplementedException();
+            return planes;
         }
-        public void Init()
+        public AttackPoint NextAttack()
         {
-            throw new NotImplementedException();
+            return new AttackPoint(1, 1);
         }
 
-        public void SetPlanes()
+        public void SetPlanes(Plane[] planes)
         {
-            throw new NotImplementedException();
+            this.planes = planes;
         }
 
         public void AddAttackPoint(AttackPoint attackPoint)
         {
-            throw new NotImplementedException();
+            attackHistory.Add(attackPoint);
         }
+
+        public ArrayList GetAttackHistory()
+        {
+            return attackHistory;
+        }
+
     }
 }
