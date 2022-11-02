@@ -2,8 +2,10 @@
 using System.Windows.Forms;
 using System;
 using System.Drawing;
+using System.Collections;
 
 internal class HumanModeState : State
+
 {
     private int leftCount; // 已经放置的飞机数
 
@@ -73,5 +75,23 @@ internal class HumanModeState : State
     public void SetLocalPlayer(LocalPlayer player)
     {
         this.localPlayer = player;
+    }
+    public void DrawLastPoint(Player player, Player adversaryPlayer, Panel panel)
+    {
+        ArrayList ah = player.GetAttackHistory();
+        AttackPoint a = (AttackPoint)ah[ah.Count - 1];
+        string attackRes = Judger.JudgeAttack(adversaryPlayer, a);
+        switch (attackRes)
+        {
+            case "HIT":
+                a.Draw(panel, Color.Green);
+                break;
+            case "KILL":
+                a.Draw(panel, Color.Red);
+                break;
+            case "MISS":
+                a.Draw(panel, Color.Gray);
+                break;
+        }
     }
 }
