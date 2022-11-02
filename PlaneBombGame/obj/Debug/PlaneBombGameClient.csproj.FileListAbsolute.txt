@@ -1,0 +1,33 @@
+C:\Users\rog\Desktop\DIR\MyPlane\client\PlaneBombGame\obj\Debug\PlaneBombGameClient.csproj.AssemblyReference.cache
+C:\Users\rog\Desktop\DIR\MyPlane\client\PlaneBombGame\obj\Debug\PlaneBombGameClient.csproj.SuggestedBindingRedirects.cache
+C:\Users\rog\Desktop\DIR\MyPlane\client\PlaneBombGame\obj\Debug\PlaneBombGame.Form1.resources
+C:\Users\rog\Desktop\DIR\MyPlane\client\PlaneBombGame\obj\Debug\PlaneBombGame.Properties.Resources.resources
+C:\Users\rog\Desktop\DIR\MyPlane\client\PlaneBombGame\obj\Debug\PlaneBombGameClient.csproj.GenerateResource.cache
+C:\Users\rog\Desktop\DIR\MyPlane\client\PlaneBombGame\obj\Debug\PlaneBombGameClient.csproj.CoreCompileInputs.cache
+C:\Users\rog\Desktop\DIR\MyPlane\client\PlaneBombGame\obj\Debug\PlaneBombGame.exe
+C:\Users\rog\Desktop\DIR\MyPlane\client\PlaneBombGame\obj\Debug\PlaneBombGame.pdb
+C:\Users\rog\Desktop\DIR\MyPlane\client\PlaneBombGame\bin\Debug\PlaneBombGame.exe.config
+C:\Users\rog\Desktop\DIR\MyPlane\client\PlaneBombGame\bin\Debug\PlaneBombGame.exe
+C:\Users\rog\Desktop\DIR\MyPlane\client\PlaneBombGame\bin\Debug\PlaneBombGame.pdb
+C:\Users\rog\Desktop\DIR\MyPlane\client2\PlaneBombGame\bin\Debug\PlaneBombGame.exe.config
+C:\Users\rog\Desktop\DIR\MyPlane\client2\PlaneBombGame\bin\Debug\PlaneBombGame.exe
+C:\Users\rog\Desktop\DIR\MyPlane\client2\PlaneBombGame\bin\Debug\PlaneBombGame.pdb
+C:\Users\rog\Desktop\DIR\MyPlane\client2\PlaneBombGame\obj\Debug\PlaneBombGameClient.csproj.AssemblyReference.cache
+C:\Users\rog\Desktop\DIR\MyPlane\client2\PlaneBombGame\obj\Debug\PlaneBombGameClient.csproj.SuggestedBindingRedirects.cache
+C:\Users\rog\Desktop\DIR\MyPlane\client2\PlaneBombGame\obj\Debug\PlaneBombGame.Form1.resources
+C:\Users\rog\Desktop\DIR\MyPlane\client2\PlaneBombGame\obj\Debug\PlaneBombGame.Properties.Resources.resources
+C:\Users\rog\Desktop\DIR\MyPlane\client2\PlaneBombGame\obj\Debug\PlaneBombGameClient.csproj.GenerateResource.cache
+C:\Users\rog\Desktop\DIR\MyPlane\client2\PlaneBombGame\obj\Debug\PlaneBombGameClient.csproj.CoreCompileInputs.cache
+C:\Users\rog\Desktop\DIR\MyPlane\client2\PlaneBombGame\obj\Debug\PlaneBombGame.exe
+C:\Users\rog\Desktop\DIR\MyPlane\client2\PlaneBombGame\obj\Debug\PlaneBombGame.pdb
+D:\Projects\C Sharp\PlaneBombGame\PlaneBombGame\obj\Debug\PlaneBombGameClient.csproj.AssemblyReference.cache
+D:\Projects\C Sharp\PlaneBombGame\PlaneBombGame\obj\Debug\PlaneBombGameClient.csproj.SuggestedBindingRedirects.cache
+D:\Projects\C Sharp\PlaneBombGame\PlaneBombGame\obj\Debug\PlaneBombGame.Form1.resources
+D:\Projects\C Sharp\PlaneBombGame\PlaneBombGame\obj\Debug\PlaneBombGame.Properties.Resources.resources
+D:\Projects\C Sharp\PlaneBombGame\PlaneBombGame\obj\Debug\PlaneBombGameClient.csproj.GenerateResource.cache
+D:\Projects\C Sharp\PlaneBombGame\PlaneBombGame\obj\Debug\PlaneBombGameClient.csproj.CoreCompileInputs.cache
+D:\Projects\C Sharp\PlaneBombGame\PlaneBombGame\obj\Debug\PlaneBombGame.exe
+D:\Projects\C Sharp\PlaneBombGame\PlaneBombGame\obj\Debug\PlaneBombGame.pdb
+D:\Projects\C Sharp\PlaneBombGame\PlaneBombGame\bin\Debug\PlaneBombGame.exe.config
+D:\Projects\C Sharp\PlaneBombGame\PlaneBombGame\bin\Debug\PlaneBombGame.exe
+D:\Projects\C Sharp\PlaneBombGame\PlaneBombGame\bin\Debug\PlaneBombGame.pdb
