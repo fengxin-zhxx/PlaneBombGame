@@ -62,7 +62,7 @@ namespace PlaneBombGame
             for (int i = 0; i < 3; i++) {
                 g.DrawRectangle(pen, recs[direction * 3 + i]);
             }*/
-            SolidBrush brush = new SolidBrush(Color.SteelBlue);
+            SolidBrush brush = new SolidBrush(Color.Thistle);
             for (int i = 0; i < 3; i++) {
                 g.FillRectangle(brush, recs[direction * 3 + i]);
             }

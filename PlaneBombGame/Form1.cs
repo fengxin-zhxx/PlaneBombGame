@@ -133,40 +133,7 @@ namespace PlaneBombGame
         private void panel3_MouseDown(object sender, MouseEventArgs e)
         {
 
-            if (state.GetLeftCount() == 3)
-            {
-                //飞机放置完毕后发送至server端
-                string planesStr = "0 ";
-
-                Plane[] planes = state.GetLocalPlayer().GetPlanes();
-                for (int i = 0; i < planes.Length; i++)
-                {
-                    planesStr += planes[i].x + "," + planes[i].y + "," + planes[i].direction;
-                    if (i != planes.Length - 1)
-                    {
-                        planesStr += " ";
-                    }
-                }
-
-                socket.sendStr = planesStr;
-
-                if (isEnemySetAllPlanes == false)
-                {
-                    MessageBox.Show("请等待对手放置完Ta的飞机", "提示");
-                    return;
-                }
-
-                MessageBox.Show("对手已经放置完Ta的飞机", "提示");
-
-                Plane[] showPlanes = state.GetAdversaryPlayer().GetPlanes();
-
-
-                MessageBox.Show(showPlanes[0].x + " " + showPlanes[0].y + "  " + showPlanes[1].x + " " + showPlanes[1].y + "  " + showPlanes[2].x + " " + showPlanes[2].y, "对方放置飞机");
-
-                MessageBox.Show("按确认开始对战", "提示");
-                label1.Text = "点击右侧方格以攻击对手";
-            }
-
+            
             if (e.Button == MouseButtons.Right)
             {
                 if (start)
@@ -204,9 +171,50 @@ namespace PlaneBombGame
 
                     state.GetLocalPlayer().SetOnePlane(plane,state.GetLeftCount());
                     state.DrawPlane(panel3); 
-
                     state.SetLeftCount(state.GetLeftCount() + 1);
-                    
+
+                    if (state.GetLeftCount() == 3)
+                    {
+                        if(state is HumanModeState)
+                        {
+                            //飞机放置完毕后发送至server端
+                            string planesStr = "0 ";
+
+                            Plane[] planes = state.GetLocalPlayer().GetPlanes();
+                            for (int i = 0; i < planes.Length; i++)
+                            {
+                                planesStr += planes[i].x + "," + planes[i].y + "," + planes[i].direction;
+                                if (i != planes.Length - 1)
+                                {
+                                    planesStr += " ";
+                                }
+                            }
+
+                            socket.sendStr = planesStr;
+
+                            if (isEnemySetAllPlanes == false)
+                            {
+                                MessageBox.Show("请等待对手放置完Ta的飞机", "提示");
+                                return;
+                            }
+
+                            MessageBox.Show("对手已经放置完Ta的飞机", "提示");
+
+                            Plane[] showPlanes = state.GetAdversaryPlayer().GetPlanes();
+
+                            MessageBox.Show(showPlanes[0].x + " " + showPlanes[0].y + "  " + showPlanes[1].x + " " + showPlanes[1].y + "  " + showPlanes[2].x + " " + showPlanes[2].y, "对方放置飞机");
+                        }
+                        else
+                        {
+                            state.GetAdversaryPlayer().SetPlanes(null);
+                        }
+
+
+                        MessageBox.Show("按确认开始对战", "提示");
+                        label1.Text = "点击右侧方格以攻击对手";
+                    }
+
+
                 }
                 catch (Exception) { } // 防止崩溃
 
@@ -230,11 +238,15 @@ namespace PlaneBombGame
                 }
 
                 //不是我的回合
-                if(whoseTurn == false)
+                if(state is HumanModeState)
                 {
-                    MessageBox.Show("请等待对手行棋！", "提示");
-                    return;
+                    if (whoseTurn == false)
+                    {
+                        MessageBox.Show("请等待对手行棋！", "提示");
+                        return;
+                    }
                 }
+                
 
 
                 //MessageBox.Show(e.X + " " + e.Y); 相对于当前panel
@@ -245,7 +257,7 @@ namespace PlaneBombGame
 
                 try
                 {
-                    if(!Judger.JudgeLegalPlacement(state.GetAdversaryPlayer(), PlacementX, PlacementY))
+                    if(!Judger.JudgeLegalPlacement(state.GetLocalPlayer(), PlacementX, PlacementY))
                     {
                         MessageBox.Show("位置不合法, 请重新放置", "提示");
                         return;
@@ -258,15 +270,25 @@ namespace PlaneBombGame
                     state.DrawLastPoint(state.GetLocalPlayer(), state.GetAdversaryPlayer(), panel4);
 
                     
+                    if(state is HumanModeState)
+                    {
+                        string chessDownStr = "1" + " " + PlacementX + " " + PlacementY + " " + chessDownCount;
 
-                    string chessDownStr = "1" + " " + PlacementX + " " + PlacementY + " " + chessDownCount;
-
-                    socket.sendStr = chessDownStr;
+                        socket.sendStr = chessDownStr;
 
 
-                    chessDownCount++;
+                        chessDownCount++;
 
-                    whoseTurn = false;//在对手下完棋之前不会再下棋
+                        whoseTurn = false;//在对手下完棋之前不会再下棋
+                    }
+                    else
+                    {
+                        Player player = state.GetAdversaryPlayer();
+                        player.AddAttackPoint(player.NextAttack());
+                        state.DrawLastPoint(state.GetAdversaryPlayer(), state.GetLocalPlayer(), panel3);
+                    }
+
+                    
                 }
                 catch (Exception) { } 
             }
