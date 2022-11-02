@@ -22,7 +22,7 @@ namespace PlaneBombGame
 
         public bool isConnected = false;
 
-        private IPAddress ip = IPAddress.Parse("127.0.0.1");
+        private IPAddress ip = IPAddress.Parse("49.140.60.45");
 
         private int port = 8885;
 

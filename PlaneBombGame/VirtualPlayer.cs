@@ -18,6 +18,7 @@ namespace PlaneBombGame
 
         public AttackPoint NextAttack()
         {
+
             return new AttackPoint(r.Next(1, 10), r.Next(1, 10));
         }
 
@@ -31,13 +32,9 @@ namespace PlaneBombGame
             return attackHistory;
         }
 
-        public void SetPlanes()
-        {
-            this.planes = GeneratePlanes();
-        }
-
         public void SetPlanes(Plane[] planes)
-        {
+        {    
+            this.planes = GeneratePlanes();
         }
 
         public void AddAttackPoint(AttackPoint attackPoint)

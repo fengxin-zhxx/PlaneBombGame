@@ -162,6 +162,10 @@ namespace PlaneBombGame
         }
         public static bool JudgeLegalPlacement(Player player, int x, int y)
         {
+            foreach(AttackPoint a in player.GetAttackHistory())
+            {
+                if (a.x == x && a.y == y) return false;
+            }
             /*TO DO*/
             return true;
         }
