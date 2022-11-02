@@ -166,7 +166,6 @@ namespace PlaneBombGame
             {
                 if (a.x == x && a.y == y) return false;
             }
-            /*TO DO*/
             return true;
         }
     
