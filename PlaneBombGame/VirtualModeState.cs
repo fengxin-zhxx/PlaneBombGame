@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -24,6 +25,25 @@ namespace PlaneBombGame
             throw new NotImplementedException();
         }
 
+        public void DrawLastPoint(Player player, Player adversaryPlayer, Panel panel)
+        {
+            ArrayList ah = player.GetAttackHistory();
+            AttackPoint a = (AttackPoint)ah[ah.Count - 1];
+            string attackRes = Judger.JudgeAttack(adversaryPlayer, a);
+            switch (attackRes)
+            {
+                case "HIT":
+                    a.Draw(panel, Color.Green);
+                    break;
+                case "KILL":
+                    a.Draw(panel, Color.Red);
+                    break;
+                case "MISS":
+                    a.Draw(panel, Color.Gray);
+                    break;
+            }
+        }
+
         public void DrawPlane(Panel panel)
         {
             Plane[] planes = localPlayer.GetPlanes();
@@ -34,7 +54,6 @@ namespace PlaneBombGame
             }
 
         }
-
         public void DrawPoint(Player player, Player adversaryPlayer, Panel panel)
         {
             foreach(AttackPoint a in player.GetAttackHistory())

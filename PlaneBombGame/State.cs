@@ -28,5 +28,9 @@ namespace PlaneBombGame
         void DrawPoint(Player player, Player adversaryPlayer, Panel panel);
         //绘画player的攻击点, 以adversaryPlayer的Planes为结果判断依据
 
+        void DrawLastPoint(Player player, Player adversaryPlayer, Panel panel);
+        //绘画player的攻击点, 以adversaryPlayer的Planes为结果判断依据
+
+
     }
 }

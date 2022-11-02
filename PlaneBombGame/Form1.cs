@@ -60,7 +60,7 @@ namespace PlaneBombGame
             initialize();                      
             this.Width = StandardSize.FormWidth;       
             this.Height = StandardSize.FormHeight;     
-            this.Location = new Point(400, 75);   
+            this.Location = new Point(100, 10);   
         }
         private void ReDraw()
         {
@@ -167,7 +167,7 @@ namespace PlaneBombGame
 
 
                     state.GetLocalPlayer().AddAttackPoint(attackPoint); // 新的攻击点加入历史记录
-                    state.DrawPoint(state.GetLocalPlayer(), state.GetAdversaryPlayer(), panel4);
+                    state.DrawLastPoint(state.GetLocalPlayer(), state.GetAdversaryPlayer(), panel4);
 
                     AttackPoint adversaryAttackPoint= state.GetAdversaryPlayer().NextAttack();
                     //获取对手攻击点
@@ -175,7 +175,7 @@ namespace PlaneBombGame
 
                     //MessageBox.Show(adversaryAttackPoint.x + " " + adversaryAttackPoint.y, "对方落子");
                     state.GetAdversaryPlayer().AddAttackPoint(adversaryAttackPoint);
-                    state.DrawPoint(state.GetAdversaryPlayer(), state.GetLocalPlayer(), panel3);
+                    state.DrawLastPoint(state.GetAdversaryPlayer(), state.GetLocalPlayer(), panel3);
 
                 }
                 catch (Exception) { } 
