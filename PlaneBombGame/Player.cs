@@ -10,12 +10,15 @@ namespace PlaneBombGame
     internal interface Player
     {
 
-        void Init();
+        //void Init();
         AttackPoint NextAttack();
 
         Plane[] GetPlanes();
 
-        void SetPlanes();
+        //void SetPlanes();
+
+        void SetPlanes(Plane[] planes);
+
         // 对于VirtualPlayer: 生成对应的Planes
         // 对于SocketPlayer:  接收对方放置的Planes
 
