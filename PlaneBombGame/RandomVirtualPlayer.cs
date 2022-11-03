@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PlaneBombGame
 {
-    internal class VirtualPlayer : Player
+    internal class RandomVirtualPlayer : Player
     {
 
         Plane[] planes { get; set; }
@@ -19,8 +19,6 @@ namespace PlaneBombGame
 
         public AttackPoint NextAttack()
         {
-            /*TO DO*/
-            // AI PART    
             return new AttackPoint(r.Next(1, 10), r.Next(1, 10));
         }
 

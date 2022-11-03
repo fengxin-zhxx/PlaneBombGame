@@ -69,7 +69,7 @@
     <Compile Include="State.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="VirtualModeState.cs" />
-    <Compile Include="VirtualPlayer.cs" />
+    <Compile Include="RandomVirtualPlayer.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

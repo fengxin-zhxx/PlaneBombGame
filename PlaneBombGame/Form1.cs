@@ -55,14 +55,15 @@ namespace PlaneBombGame
             state  = new VirtualModeState();
             nowDir = 0;
             this.label1.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            label1.Text = label1Text + directions[nowDir];           
+            label1.Text = label1Text + directions[nowDir];
+            lastX = lastY = -1;
             panel1.Invalidate();
             panel3.Invalidate();
             panel4.Invalidate();
 
             start = true;
             state.SetLeftCount(0);
-            state.SetAdversaryPlayer(new VirtualPlayer());
+            state.SetAdversaryPlayer(new RandomVirtualPlayer());
             state.SetLocalPlayer(new LocalPlayer());
 
         }
@@ -72,6 +73,8 @@ namespace PlaneBombGame
         {
             //socket = ClientSocket.getClientSocket();
             //socket.connectToServer();
+
+            lastX = lastY = -1;
 
             socket = ServerSocket.getServerSocket();
             socket.ListenClientConnect();   
