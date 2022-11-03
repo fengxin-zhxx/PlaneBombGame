@@ -11,6 +11,8 @@ namespace PlaneBombGame
     {
         Plane[] planes { get; set; }
 
+        Plane previewPlane;
+
         ArrayList attackHistory = new ArrayList();
         public ArrayList GetAttackHistory()
         {
@@ -20,7 +22,23 @@ namespace PlaneBombGame
         {
             return new AttackPoint(1, 1);
         }
-
+        public Plane GetPreviewPlane()
+        {
+            return previewPlane;
+        }
+        public void UpdatePreviewPlane(int x,int y,int dir)
+        {
+            if(previewPlane == null)
+            {
+                previewPlane = new Plane(x,y,dir);
+            }
+            else
+            {
+                previewPlane.x = x;
+                previewPlane.y = y;
+                previewPlane.direction = dir;
+            }
+        }
         public Plane[] GetPlanes()
         {
             if (planes == null)

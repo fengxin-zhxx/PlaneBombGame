@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Net.Http.Headers;
@@ -29,16 +30,23 @@ namespace PlaneBombGame
 
         private ServerSocket socket;
 
+        private Bitmap bitmap = new Bitmap(StandardSize.BoardWidth, StandardSize.BoardHeight);
 
+        private int lastX = -1, lastY = -1; 
 
-        bool start;
-        int nowDir;
-        string[] directions = { "→", "↓", "←", "↑" };
+        private bool start;
+
+        private int nowDir;
+
+        private string[] directions = { "→", "↓", "←", "↑" };
         //飞机方向显示
-        string label1Text = "放置你的飞机 按右键切换机头朝向 当前朝向：";
+        private string label1Text = "放置你的飞机 按右键切换机头朝向 当前朝向：";
         public Form1()
         {
             InitializeComponent();
+            SetStyle(ControlStyles.UserPaint, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
         }
 
         //人机对战  采用随机生成飞机  随即落点的方式
@@ -84,9 +92,6 @@ namespace PlaneBombGame
             state.SetLeftCount(0);
             state.SetAdversaryPlayer(new HumanPlayer());
             state.SetLocalPlayer(new LocalPlayer());
-
-
-
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -108,25 +113,36 @@ namespace PlaneBombGame
             // TO DO
         }
 
-        private void ReDraw()
-        {
-            state.DrawPlane(panel3);
-            state.DrawPoint(state.GetLocalPlayer(), state.GetAdversaryPlayer(), panel4);
-            state.DrawPoint(state.GetAdversaryPlayer(), state.GetLocalPlayer(), panel3);
-        }
 
         //绘制左侧棋盘
         private void panel3_Paint(object sender, PaintEventArgs e)
         {
-            PlayingBoard.DrawCB(panel3);
-            if(state != null) ReDraw();
+            Graphics g  = Graphics.FromImage(bitmap);
+            PlayingBoard.DrawCB(g);
+            if(state != null)
+            {
+                state.DrawPlane(g);
+                state.DrawPoint(state.GetAdversaryPlayer(), state.GetLocalPlayer(), g);
+                if(lastX != -1)
+                {
+                    state.GetLocalPlayer().GetPreviewPlane().Draw(g,true);
+                }
+            }
+            
+            panel3.CreateGraphics().DrawImage(bitmap, 0, 0);
+
         }
 
         //绘制右侧棋盘
         private void panel4_Paint(object sender, PaintEventArgs e)
         {
-            PlayingBoard.DrawCB(panel4);
-            if(state != null) ReDraw();
+            Graphics g = Graphics.FromImage(bitmap);
+            PlayingBoard.DrawCB(g);
+            if(state != null)
+            {
+                state.DrawPoint(state.GetLocalPlayer(), state.GetAdversaryPlayer(), g);
+            }
+            panel4.CreateGraphics().DrawImage(bitmap, 0, 0);
         }
 
         //左侧棋盘 放置自己的飞机
@@ -140,6 +156,8 @@ namespace PlaneBombGame
                 {
                     nowDir = (nowDir + 1) % 4;
                     label1.Text = label1Text + directions[nowDir];
+                    state.GetLocalPlayer().GetPreviewPlane().direction = nowDir;
+                    panel3.Invalidate();
                 }
                 else
                 {
@@ -151,7 +169,7 @@ namespace PlaneBombGame
             {
 
                 if(state.GetLeftCount() >= 3) return;
-                if (!Judger.JudgeLegalMouseDown(e)) return;
+                if (!Judger.JudgeLegalMouseDown(e.X, e.Y)) return;
 
 
                 int PlacementX = (e.X - StandardSize.toLeft) / StandardSize.BlockWidth;      // 求鼠标点击的X方向的第几个点位
@@ -170,7 +188,7 @@ namespace PlaneBombGame
                     MessageBox.Show("X=" + PlacementX + " Y=" + PlacementY + " DIR=" + nowDir);
 
                     state.GetLocalPlayer().SetOnePlane(plane,state.GetLeftCount());
-                    state.DrawPlane(panel3); 
+                    state.DrawPlane(panel3.CreateGraphics()); 
                     state.SetLeftCount(state.GetLeftCount() + 1);
 
                     if (state.GetLeftCount() == 3)
@@ -250,7 +268,7 @@ namespace PlaneBombGame
 
 
                 //MessageBox.Show(e.X + " " + e.Y); 相对于当前panel
-                if (!Judger.JudgeLegalMouseDown(e)) return;
+                if (!Judger.JudgeLegalMouseDown(e.X, e.Y)) return;
 
                 int PlacementX = (e.X - StandardSize.toLeft) / StandardSize.BlockWidth;      // 求鼠标点击的X方向的第几个点位
                 int PlacementY = (e.Y - StandardSize.toTop) / StandardSize.BlockWidth;      // 求鼠标点击的Y方向的第几个点位
@@ -267,7 +285,7 @@ namespace PlaneBombGame
                     
                     state.GetLocalPlayer().AddAttackPoint(attackPoint); // 新的攻击点加入历史记录
 
-                    state.DrawLastPoint(state.GetLocalPlayer(), state.GetAdversaryPlayer(), panel4);
+                    state.DrawLastPoint(state.GetLocalPlayer(), state.GetAdversaryPlayer(), panel4.CreateGraphics());
 
                     
                     if(state is HumanModeState)
@@ -285,7 +303,7 @@ namespace PlaneBombGame
                     {
                         Player player = state.GetAdversaryPlayer();
                         player.AddAttackPoint(player.NextAttack());
-                        state.DrawLastPoint(state.GetAdversaryPlayer(), state.GetLocalPlayer(), panel3);
+                        state.DrawLastPoint(state.GetAdversaryPlayer(), state.GetLocalPlayer(), panel3.CreateGraphics());
                     }
 
                     
@@ -343,7 +361,7 @@ namespace PlaneBombGame
                             //显示弹窗
                             MessageBox.Show(attackPoint.x + " " + attackPoint.y, "对方落子");
                             //绘制棋盘
-                            state.DrawLastPoint(state.GetAdversaryPlayer(), state.GetLocalPlayer(), panel3);
+                            state.DrawLastPoint(state.GetAdversaryPlayer(), state.GetLocalPlayer(), panel3.CreateGraphics());
                             //允许下棋
                             whoseTurn = true;
                             break;
@@ -351,6 +369,45 @@ namespace PlaneBombGame
                     //消息翻译完毕字符串清空
                     socket.receiveStr = "";
                 }
+            }
+        }
+
+
+       
+        private void panel3_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (start)
+            {
+
+                if (state.GetLeftCount() >= 3) return;
+                if (!Judger.JudgeLegalMouseDown(e.X, e.Y)) return;
+
+
+                int PlacementX = (e.X - StandardSize.toLeft) / StandardSize.BlockWidth;      // 求鼠标点击的X方向的第几个点位
+                int PlacementY = (e.Y - StandardSize.toTop) / StandardSize.BlockWidth;      // 求鼠标点击的Y方向的第几个点位
+
+                if(PlacementX == lastX && PlacementY == lastY)
+                {
+                    return;
+                }
+                lastX = PlacementX;
+                lastY = PlacementY;
+                state.GetLocalPlayer().UpdatePreviewPlane(PlacementX, PlacementY,nowDir);
+               
+                try
+                {
+                    //TO DO 性能优化
+                    if (!Judger.JudgeLegalPlanePlacement(state.GetLocalPlayer().GetPlanes(), state.GetLocalPlayer().GetPreviewPlane()))
+                    {
+                        lastX = -1;
+                        lastY = -1;
+                    }
+                    panel3.Invalidate();
+                    //plane.Draw(panel5);
+
+
+                }
+                catch (Exception) { } // 防止崩溃
             }
         }
 

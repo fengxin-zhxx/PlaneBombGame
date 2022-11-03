@@ -10,15 +10,14 @@ namespace PlaneBombGame
 {
     internal class PlayingBoard
     {
-        public static void DrawCB(Panel panel)  //传入画布对象
+        public static void DrawCB(Graphics g)  //传入画布对象
         {
-            Graphics g = panel.CreateGraphics();      // 创建面板画布
             int BlockWidth = StandardSize.BlockWidth;                   // 格子宽度
             int BlockNum = StandardSize.BoardWidth / BlockWidth - 1;    // 地图格子数量
 
             int toLeft = StandardSize.toLeft;
             int toTop = StandardSize.toTop;
-            //这个是 没有用棋盘图片时，用的“画笔”画棋盘方法
+
             g.Clear(Color.Bisque);                               // 清除画布、并用Bisque颜色填满画布
             Pen pen = new Pen(Color.FromArgb(192, 166, 107));    // 实例化画笔
             // 画棋盘

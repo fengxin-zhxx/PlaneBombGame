@@ -24,8 +24,7 @@ namespace PlaneBombGame
         }
 
         //加入飞机方向判断
-        public void Draw(Panel p) {
-            Graphics g = p.CreateGraphics();                // 创建面板画布
+        public void Draw(Graphics g, bool isPreviewPlane = false) {
 
             g.SmoothingMode = SmoothingMode.HighQuality;
             g.InterpolationMode = InterpolationMode.HighQualityBicubic;
@@ -62,7 +61,9 @@ namespace PlaneBombGame
             for (int i = 0; i < 3; i++) {
                 g.DrawRectangle(pen, recs[direction * 3 + i]);
             }*/
-            SolidBrush brush = new SolidBrush(Color.Thistle);
+            SolidBrush brush;
+            if (!isPreviewPlane) brush = new SolidBrush(Color.Thistle);
+            else brush = new SolidBrush(Color.Pink);
             for (int i = 0; i < 3; i++) {
                 g.FillRectangle(brush, recs[direction * 3 + i]);
             }

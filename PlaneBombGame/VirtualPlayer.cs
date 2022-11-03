@@ -16,9 +16,11 @@ namespace PlaneBombGame
 
         Random r = new Random(); // 以当前时间为随机数种子
 
+
         public AttackPoint NextAttack()
         {
-
+            /*TO DO*/
+            // AI PART    
             return new AttackPoint(r.Next(1, 10), r.Next(1, 10));
         }
 

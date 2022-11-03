@@ -20,7 +20,7 @@ namespace PlaneBombGame
             throw new NotImplementedException();
         }
 
-        public void DrawLastPoint(Player player, Player adversaryPlayer, Panel panel)
+        public void DrawLastPoint(Player player, Player adversaryPlayer, Graphics g)
         {
             ArrayList ah = player.GetAttackHistory();
             AttackPoint a = (AttackPoint)ah[ah.Count - 1];
@@ -28,29 +28,29 @@ namespace PlaneBombGame
             switch (attackRes)
             {
                 case "HIT":
-                    a.Draw(panel, Color.Green);
+                    a.Draw(g, Color.Green);
                     break;
                 case "KILL":
-                    a.Draw(panel, Color.Red);
+                    a.Draw(g, Color.Red);
                     break;
                 case "MISS":
-                    a.Draw(panel, Color.Gray);
+                    a.Draw(g, Color.Gray);
                     break;
             }
         }
 
-        public void DrawPlane(Panel panel)
+        public void DrawPlane(Graphics g)
         {
             Plane[] planes = localPlayer.GetPlanes();
             foreach(Plane plane in planes)
             {
                 if(plane != null)   
-                    plane.Draw(panel);
+                    plane.Draw(g);
             }
         }
         
         //第一个参数为攻击方  第二个参数为受击方 绘制第一个对第二个的伤害点
-        public void DrawPoint(Player player, Player adversaryPlayer, Panel panel)
+        public void DrawPoint(Player player, Player adversaryPlayer, Graphics g)
         {
             //遍历自身攻击过的点
             foreach(AttackPoint a in player.GetAttackHistory())
@@ -60,13 +60,13 @@ namespace PlaneBombGame
                 switch (attackRes)
                 {
                     case "HIT":
-                        a.Draw(panel, Color.Green);
+                        a.Draw(g, Color.Green);
                         break;
                     case "KILL":
-                        a.Draw(panel, Color.Red);
+                        a.Draw(g, Color.Red);
                         break;
                     case "MISS":
-                        a.Draw(panel, Color.Gray);
+                        a.Draw(g, Color.Gray);
                         break;
                 }
             }

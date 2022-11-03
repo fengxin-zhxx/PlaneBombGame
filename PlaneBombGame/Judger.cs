@@ -169,12 +169,13 @@ namespace PlaneBombGame
             return true;
         }
     
-        public static bool JudgeLegalMouseDown(MouseEventArgs e)
+
+        public static bool JudgeLegalMouseDown(int X, int Y)
         {
-            if (   e.Y < StandardSize.toTop 
-                || e.X < StandardSize.toLeft 
-                || e.Y >= StandardSize.toTop + (StandardSize.BlockNum + 1) * StandardSize.BlockWidth 
-                || e.X >= StandardSize.toLeft + (StandardSize.BlockNum + 1) * StandardSize.BlockWidth
+            if (Y < StandardSize.toTop
+                || X < StandardSize.toLeft
+                || Y >= StandardSize.toTop + (StandardSize.BlockNum + 1) * StandardSize.BlockWidth
+                || X >= StandardSize.toLeft + (StandardSize.BlockNum + 1) * StandardSize.BlockWidth
                 ) return false;
             return true;
         }
