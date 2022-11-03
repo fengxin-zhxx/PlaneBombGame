@@ -114,7 +114,10 @@ namespace PlaneBombGame
 
             //g.FillEllipse(new SolidBrush(Color.Blue), AccurateX, AccurateY, StandardSize.BlockWidth, StandardSize.BlockWidth);
         }
-
+        public override string ToString()
+        {
+            return "" + x + " " + y + " " + direction;
+        }
 
     }
 }

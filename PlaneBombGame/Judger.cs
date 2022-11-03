@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
@@ -60,29 +61,35 @@ namespace PlaneBombGame
         }
         public static bool JudgeLegalPlaneCoordinate(Plane plane)
         {
-            switch (plane.direction)
+            return JudgeLegalPlaneCoordinate(plane.x, plane.y, plane.direction);
+        }
+
+        public static bool JudgeLegalPlaneCoordinate(int x,int y,int dir)
+        {
+            switch (dir)
             {
                 case 0:
-                    if (plane.x - 2 < 1 || plane.x + 1 > StandardSize.BlockNum) return false;
-                    if (plane.y - 2 < 1 || plane.y + 2 > StandardSize.BlockNum) return false;
+                    if (x - 2 < 1 || x + 1 > StandardSize.BlockNum) return false;
+                    if (y - 2 < 1 || y + 2 > StandardSize.BlockNum) return false;
                     break;
                 case 1:
-                    if (plane.x - 2 < 1 || plane.x + 2 > StandardSize.BlockNum) return false;
-                    if (plane.y - 2 < 1 || plane.y + 1 > StandardSize.BlockNum) return false;
+                    if (x - 2 < 1 || x + 2 > StandardSize.BlockNum) return false;
+                    if (y - 2 < 1 || y + 1 > StandardSize.BlockNum) return false;
                     break;
                 case 2:
-                    if (plane.x - 1 < 1 || plane.x + 2 > StandardSize.BlockNum) return false;
-                    if (plane.y - 2 < 1 || plane.y + 2 > StandardSize.BlockNum) return false;
+                    if (x - 1 < 1 || x + 2 > StandardSize.BlockNum) return false;
+                    if (y - 2 < 1 || y + 2 > StandardSize.BlockNum) return false;
                     break;
                 case 3:
-                    if (plane.x - 2 < 1 || plane.x + 2 > StandardSize.BlockNum) return false;
-                    if (plane.y - 1 < 1 || plane.y + 2 > StandardSize.BlockNum) return false;
+                    if (x - 2 < 1 || x + 2 > StandardSize.BlockNum) return false;
+                    if (y - 1 < 1 || y + 2 > StandardSize.BlockNum) return false;
                     break;
                 default:
                     break;
             }
             return true;
         }
+
         public static bool JudgePlaneOverlap(Plane[] planes, Plane plane)
         {
             int[,] map = new int[11, 11];
@@ -98,7 +105,7 @@ namespace PlaneBombGame
             al.Add(plane);
             foreach(Plane playerPlane in al)
             {
-                if (playerPlane == null) break;
+                if (playerPlane == null) continue;
                 int px = playerPlane.x, py = playerPlane.y;
                 switch (playerPlane.direction)
                 {
@@ -151,6 +158,19 @@ namespace PlaneBombGame
             }
             return true;
         }
+
+        public static bool JudgePlaneOverlap(int[] X, int[] Y, int[] D, int x, int y, int dir) {
+            Plane[] planes = new Plane[3];
+            for(int i = 0; i < 3; i++)
+            {
+                if (D[i] != -1)
+                {
+                    planes[i] = new Plane(X[i], Y[i], D[i]);
+                }
+            }
+            return JudgePlaneOverlap(planes, new Plane(x, y, dir));
+        }
+
         public static bool JudgeLegalPlanePlacement(Plane[] planes, Plane plane)
         {
             if (plane == null) return false;
@@ -177,6 +197,13 @@ namespace PlaneBombGame
                 || Y >= StandardSize.toTop + (StandardSize.BlockNum + 1) * StandardSize.BlockWidth
                 || X >= StandardSize.toLeft + (StandardSize.BlockNum + 1) * StandardSize.BlockWidth
                 ) return false;
+            return true;
+        }
+
+        public static bool JudgeLegalPlanePlacement(int[] X, int[] Y, int[] D, int x, int y, int dir)
+        {
+            if (!JudgeLegalPlaneCoordinate(x, y, dir)) return false;
+            if (!JudgePlaneOverlap(X, Y, D, x, y, dir)) return false;
             return true;
         }
     }
