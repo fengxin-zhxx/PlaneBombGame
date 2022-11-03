@@ -22,7 +22,7 @@ namespace PlaneBombGame
 
         public bool isConnected = false;
 
-        private IPAddress ip = IPAddress.Parse("49.140.60.45");
+        private IPAddress ip = IPAddress.Parse("127.0.0.1");
 
         private int port = 8885;
 
@@ -72,9 +72,20 @@ namespace PlaneBombGame
         {
             while (true)
             {
-                byte[] result = new byte[1024];
-                int receiveNumber = clientSocket.Receive(result);
-                receiveStr = Encoding.ASCII.GetString(result, 0, receiveNumber);
+                try
+                {
+                    byte[] result = new byte[1024];
+                    int receiveNumber = clientSocket.Receive(result);
+                    receiveStr = Encoding.ASCII.GetString(result, 0, receiveNumber);
+                }
+                catch(Exception ex)
+                {
+                    isConnected = false; 
+                    Console.WriteLine(ex.Message);
+                    clientSocket.Shutdown(SocketShutdown.Both);
+                    clientSocket.Close();
+                    break;
+                }
             }
         }
 
@@ -82,10 +93,21 @@ namespace PlaneBombGame
         {
             while (true)
             {
-                if (sendStr != "")
+                try
                 {
-                    clientSocket.Send(Encoding.ASCII.GetBytes(sendStr.ToString()));
-                    sendStr = "";
+                    if (sendStr != "")
+                    {
+                        clientSocket.Send(Encoding.ASCII.GetBytes(sendStr.ToString()));
+                        sendStr = "";
+                    }
+                }  
+                catch (Exception ex)
+                {
+                    isConnected = false;
+                    Console.WriteLine(ex.Message);
+                    clientSocket.Shutdown(SocketShutdown.Both);
+                    clientSocket.Close();
+                    break;
                 }
             }
         }

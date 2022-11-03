@@ -1,10 +1,13 @@
-﻿using System;
+﻿using PlaneBombGame.Image;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Net.Http.Headers;
+using System.Net.Sockets;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading;
@@ -27,8 +30,11 @@ namespace PlaneBombGame
 
         //private ClientSocket socket;
 
-        private ServerSocket socket;
+        //private ServerSocket socket;
 
+        private BoomPlaneSocket socket;
+
+        public bool isConnected = false;
 
 
         bool start;
@@ -52,6 +58,9 @@ namespace PlaneBombGame
             panel3.Invalidate();
             panel4.Invalidate();
 
+
+            label4.Text = "人机模式正在进行中...";
+
             start = true;
             state.SetLeftCount(0);
             state.SetAdversaryPlayer(new VirtualPlayer());
@@ -61,18 +70,35 @@ namespace PlaneBombGame
 
         //人人对战  初始化 socket  Client 端  并生成state
         private void button2_Click(object sender, EventArgs e)
-        {
-            //socket = ClientSocket.getClientSocket();
-            //socket.connectToServer();
+        {        
+            string getNewIp = "";
 
-            socket = ServerSocket.getServerSocket();
-            socket.ListenClientConnect();   
+            string getNewPort = "";
 
-            //新建一个线程用于翻译接收到的信息
-            Thread TransMessageThread = new Thread(transMessage);
-            TransMessageThread.Start();
+            bool clientOrServer = false;
 
-            state = new HumanModeState();            
+            SetInfoDialog.Show(out getNewIp,out getNewPort,out clientOrServer);
+
+            IPAddress ip = IPAddress.Parse(getNewIp);    
+
+            int port = int.Parse(getNewPort);
+
+            if (clientOrServer)
+            {
+                socket = BoomPlaneSocket.getSocket(clientOrServer,ip,port);
+                socket.connectToServer();
+                whoseTurn = false;
+            }
+            else
+            {
+                socket = BoomPlaneSocket.getSocket(clientOrServer, ip, port);
+                socket.ListenClientConnect();
+                whoseTurn = true;
+            }
+
+            label4.Text = getNewIp + " " + getNewPort + "  "+ clientOrServer;
+            
+/*            state = new HumanModeState();
             nowDir = 0;
             this.label1.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             label1.Text = label1Text + directions[nowDir];
@@ -80,13 +106,17 @@ namespace PlaneBombGame
             panel3.Invalidate();
             panel4.Invalidate();
 
-            start = true;
             state.SetLeftCount(0);
             state.SetAdversaryPlayer(new HumanPlayer());
             state.SetLocalPlayer(new LocalPlayer());
+            start = true;*/
 
-
-
+            //新建一个线程用于监视socket的状态
+            
+            
+            Thread TransMessageThread = new Thread(transMessage);
+            TransMessageThread.Start();
+            
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -131,9 +161,7 @@ namespace PlaneBombGame
 
         //左侧棋盘 放置自己的飞机
         private void panel3_MouseDown(object sender, MouseEventArgs e)
-        {
-
-            
+        {            
             if (e.Button == MouseButtons.Right)
             {
                 if (start)
@@ -147,6 +175,13 @@ namespace PlaneBombGame
                 }
                 return;
             }
+
+            if (isEnemySetAllPlanes == false)
+            {
+                //MessageBox.Show("请等待对手放置完Ta的飞机", "提示");
+                label4.Text = "对手正在放置Ta的飞机";             
+            }
+
             if (start)
             {
 
@@ -194,23 +229,24 @@ namespace PlaneBombGame
 
                             if (isEnemySetAllPlanes == false)
                             {
-                                MessageBox.Show("请等待对手放置完Ta的飞机", "提示");
+                                //MessageBox.Show("请等待对手放置完Ta的飞机", "提示");
+                                label4.Text = "请等待对手放置完Ta的飞机";
                                 return;
                             }
 
-                            MessageBox.Show("对手已经放置完Ta的飞机", "提示");
+                            //MessageBox.Show("对手已经放置完Ta的飞机", "提示");
+                            //label4.Text = "对手已经放置完Ta的飞机，开始对战！";
 
-                            Plane[] showPlanes = state.GetAdversaryPlayer().GetPlanes();
+                            //Plane[] showPlanes = state.GetAdversaryPlayer().GetPlanes();
 
-                            MessageBox.Show(showPlanes[0].x + " " + showPlanes[0].y + "  " + showPlanes[1].x + " " + showPlanes[1].y + "  " + showPlanes[2].x + " " + showPlanes[2].y, "对方放置飞机");
+                            //MessageBox.Show(showPlanes[0].x + " " + showPlanes[0].y + "  " + showPlanes[1].x + " " + showPlanes[1].y + "  " + showPlanes[2].x + " " + showPlanes[2].y, "对方放置飞机");
                         }
                         else
                         {
                             state.GetAdversaryPlayer().SetPlanes(null);
                         }
 
-
-                        MessageBox.Show("按确认开始对战", "提示");
+                        //MessageBox.Show("按确认开始对战", "提示");
                         label1.Text = "点击右侧方格以攻击对手";
                     }
 
@@ -243,6 +279,7 @@ namespace PlaneBombGame
                     if (whoseTurn == false)
                     {
                         MessageBox.Show("请等待对手行棋！", "提示");
+                        label4.Text = "请等待对手行棋！";
                         return;
                     }
                 }
@@ -279,6 +316,8 @@ namespace PlaneBombGame
 
                         chessDownCount++;
 
+                        label4.Text = "请等待对方落子";
+
                         whoseTurn = false;//在对手下完棋之前不会再下棋
                     }
                     else
@@ -302,13 +341,50 @@ namespace PlaneBombGame
         {
             while (true)
             {
+                if(socket.isConnected == true && isConnected == false)
+                {
+                    isConnected = true;                    
+                    start = true;
+                    state = new HumanModeState();
+                    nowDir = 0;
+                    this.label1.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));                    
+                    panel1.Invalidate();
+                    panel3.Invalidate();
+                    panel4.Invalidate();
+                    state.SetLeftCount(0);
+                    state.SetAdversaryPlayer(new HumanPlayer());
+                    state.SetLocalPlayer(new LocalPlayer());
+
+                    if (label1.InvokeRequired)
+                    {
+                        Action<string> actionDelegate = (x) => { this.label1.Text = x.ToString(); };
+                        //label1.Text = label1Text + directions[nowDir];
+                        this.label1.Invoke(actionDelegate,label1Text + directions[nowDir]);
+                    }
+
+                    if (label4.InvokeRequired)
+                    {
+                        Action<string> actionDelegate = (x) => { this.label4.Text = x.ToString(); };
+                        this.label4.Invoke(actionDelegate, "云端已接入，可以开始游戏啦");
+                    }
+                }
+
+                if(socket.isConnected == false && isConnected == true)
+                {
+                    isConnected = false;                    
+                    if (label4.InvokeRequired)
+                    {
+                        Action<string> actionDelegate = (x) => { this.label4.Text = x.ToString(); };
+                        this.label4.Invoke(actionDelegate, "云端已下线，请重新开始游戏");                       
+                    }                    
+                }
+
                 //如果接收到的消息不为空
                 if (socket.receiveStr != "")
                 {
-
                     string str = socket.receiveStr;
                     
-                    MessageBox.Show(str, "提示");
+                    //MessageBox.Show(str, "提示");
 
                     string[] words = str.Split(' ');//按空格进行拆解
 
@@ -329,6 +405,11 @@ namespace PlaneBombGame
                                     planes[++index] = plane;
                                 }
                                 state.GetAdversaryPlayer().SetPlanes(planes);
+                                if (label4.InvokeRequired)
+                                {
+                                    Action<string> actionDelegate = (x) => { this.label4.Text = x.ToString(); };
+                                    this.label4.Invoke(actionDelegate, "对手已经放置完Ta的飞机，随时可以开始对战！");
+                                }
                                 isEnemySetAllPlanes = true;
                             }
                             break;
@@ -341,7 +422,13 @@ namespace PlaneBombGame
                             //加入对手落子历史
                             state.GetAdversaryPlayer().AddAttackPoint(attackPoint);
                             //显示弹窗
-                            MessageBox.Show(attackPoint.x + " " + attackPoint.y, "对方落子");
+                            //MessageBox.Show(attackPoint.x + " " + attackPoint.y, "对方落子");
+                            if (label4.InvokeRequired)
+                            {
+                                Action<string> actionDelegate = (x) => { this.label4.Text = x.ToString(); };
+                                string showMsgStr = "对方落子 : " + attackPoint.x + " " + attackPoint.y + "，请您行棋";
+                                this.label4.Invoke(actionDelegate, showMsgStr);
+                            }
                             //绘制棋盘
                             state.DrawLastPoint(state.GetAdversaryPlayer(), state.GetLocalPlayer(), panel3);
                             //允许下棋
@@ -354,5 +441,9 @@ namespace PlaneBombGame
             }
         }
 
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
