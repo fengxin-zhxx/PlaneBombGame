@@ -266,13 +266,17 @@ namespace PlaneBombGame
                         return;
                     }
                 }
-                
+
 
 
                 //MessageBox.Show(e.X + " " + e.Y); 相对于当前panel
-                if (!Judger.JudgeLegalMouseDown(e.X, e.Y)) return;
+                if (!Judger.JudgeLegalMouseDown(e.X, e.Y))
+                {
+                    MessageBox.Show("位置不合法, 请重新放置", "提示");
+                    return;
+                }
 
-                int PlacementX = (e.X - StandardSize.toLeft) / StandardSize.BlockWidth;      // 求鼠标点击的X方向的第几个点位
+                    int PlacementX = (e.X - StandardSize.toLeft) / StandardSize.BlockWidth;      // 求鼠标点击的X方向的第几个点位
                 int PlacementY = (e.Y - StandardSize.toTop) / StandardSize.BlockWidth;      // 求鼠标点击的Y方向的第几个点位
 
                 try

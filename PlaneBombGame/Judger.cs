@@ -63,20 +63,20 @@ namespace PlaneBombGame
             switch (plane.direction)
             {
                 case 0:
-                    if (plane.x - 2 < 0 || plane.x + 1 > StandardSize.BlockNum) return false;
-                    if (plane.y - 2 < 0 || plane.y + 2 > StandardSize.BlockNum) return false;
+                    if (plane.x - 2 < 1 || plane.x + 1 > StandardSize.BlockNum) return false;
+                    if (plane.y - 2 < 1 || plane.y + 2 > StandardSize.BlockNum) return false;
                     break;
                 case 1:
-                    if (plane.x - 2 < 0 || plane.x + 2 > StandardSize.BlockNum) return false;
-                    if (plane.y - 2 < 0 || plane.y + 1 > StandardSize.BlockNum) return false;
+                    if (plane.x - 2 < 1 || plane.x + 2 > StandardSize.BlockNum) return false;
+                    if (plane.y - 2 < 1 || plane.y + 1 > StandardSize.BlockNum) return false;
                     break;
                 case 2:
-                    if (plane.x - 1 < 0 || plane.x + 2 > StandardSize.BlockNum) return false;
-                    if (plane.y - 2 < 0 || plane.y + 2 > StandardSize.BlockNum) return false;
+                    if (plane.x - 1 < 1 || plane.x + 2 > StandardSize.BlockNum) return false;
+                    if (plane.y - 2 < 1 || plane.y + 2 > StandardSize.BlockNum) return false;
                     break;
                 case 3:
-                    if (plane.x - 2 < 0 || plane.x + 2 > StandardSize.BlockNum) return false;
-                    if (plane.y - 1 < 0 || plane.y + 2 > StandardSize.BlockNum) return false;
+                    if (plane.x - 2 < 1 || plane.x + 2 > StandardSize.BlockNum) return false;
+                    if (plane.y - 1 < 1 || plane.y + 2 > StandardSize.BlockNum) return false;
                     break;
                 default:
                     break;
@@ -172,8 +172,8 @@ namespace PlaneBombGame
 
         public static bool JudgeLegalMouseDown(int X, int Y)
         {
-            if (Y < StandardSize.toTop
-                || X < StandardSize.toLeft
+            if (Y < StandardSize.toTop + +StandardSize.BlockWidth
+                || X < StandardSize.toLeft + +StandardSize.BlockWidth
                 || Y >= StandardSize.toTop + (StandardSize.BlockNum + 1) * StandardSize.BlockWidth
                 || X >= StandardSize.toLeft + (StandardSize.BlockNum + 1) * StandardSize.BlockWidth
                 ) return false;
