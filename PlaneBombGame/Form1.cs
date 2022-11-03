@@ -157,7 +157,7 @@ namespace PlaneBombGame
                     nowDir = (nowDir + 1) % 4;
                     label1.Text = label1Text + directions[nowDir];
                     state.GetLocalPlayer().GetPreviewPlane().direction = nowDir;
-                    panel3.Invalidate();
+                    if (lastX != -1) panel3.Invalidate();
                 }
                 else
                 {
@@ -190,10 +190,12 @@ namespace PlaneBombGame
                     state.GetLocalPlayer().SetOnePlane(plane,state.GetLeftCount());
                     state.DrawPlane(panel3.CreateGraphics()); 
                     state.SetLeftCount(state.GetLeftCount() + 1);
-
+                    lastX = lastY = -1;
                     if (state.GetLeftCount() == 3)
                     {
-                        if(state is HumanModeState)
+
+                        lastX = lastY = -1;
+                        if (state is HumanModeState)
                         {
                             //飞机放置完毕后发送至server端
                             string planesStr = "0 ";
