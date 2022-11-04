@@ -111,7 +111,7 @@ namespace PlaneBombGame
                         result[i] = new AttackPoint(px, py + 1);
                         break;
                     case 2:
-                        result[i] = new AttackPoint(px + 1, py);
+                        result[i] = new AttackPoint(px - 1, py);
                         break;
                     case 3:
                         result[i] = new AttackPoint(px, py - 1);
