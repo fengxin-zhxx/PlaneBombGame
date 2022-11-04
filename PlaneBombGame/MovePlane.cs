@@ -101,6 +101,7 @@ namespace PlaneBombGame
                 //this.Invalidate();
                 //Graphics g = Graphics.FromImage(bitmap);
                 //g.Clear(this.BackColor);
+                lastX = lastY = -1;
                 if (state.GetLeftCount() == 3)
                 {
                     if (state is HumanModeState)
