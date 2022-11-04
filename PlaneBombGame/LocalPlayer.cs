@@ -9,6 +9,8 @@ namespace PlaneBombGame
 {
     internal class LocalPlayer : Player
     {
+        public LocalPlayer() { }
+
         Plane[] planes { get; set; }
 
         Plane previewPlane;

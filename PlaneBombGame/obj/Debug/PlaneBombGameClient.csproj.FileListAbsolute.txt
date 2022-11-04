@@ -41,3 +41,15 @@ C:\Users\fufufufufu\Documents\GitHub\PlaneBombGame\PlaneBombGame\obj\Debug\Plane
 C:\Users\fufufufufu\Documents\GitHub\PlaneBombGame\PlaneBombGame\obj\Debug\PlaneBombGameClient.csproj.CoreCompileInputs.cache
 C:\Users\fufufufufu\Documents\GitHub\PlaneBombGame\PlaneBombGame\obj\Debug\PlaneBombGame.exe
 C:\Users\fufufufufu\Documents\GitHub\PlaneBombGame\PlaneBombGame\obj\Debug\PlaneBombGame.pdb
+C:\Users\rog\Desktop\DIR\C#\PlaneBombGame\bin\Debug\PlaneBombGame.exe.config
+C:\Users\rog\Desktop\DIR\C#\PlaneBombGame\bin\Debug\PlaneBombGame.exe
+C:\Users\rog\Desktop\DIR\C#\PlaneBombGame\bin\Debug\PlaneBombGame.pdb
+C:\Users\rog\Desktop\DIR\C#\PlaneBombGame\obj\Debug\PlaneBombGameClient.csproj.AssemblyReference.cache
+C:\Users\rog\Desktop\DIR\C#\PlaneBombGame\obj\Debug\PlaneBombGameClient.csproj.SuggestedBindingRedirects.cache
+C:\Users\rog\Desktop\DIR\C#\PlaneBombGame\obj\Debug\PlaneBombGame.Form1.resources
+C:\Users\rog\Desktop\DIR\C#\PlaneBombGame\obj\Debug\PlaneBombGame.Properties.Resources.resources
+C:\Users\rog\Desktop\DIR\C#\PlaneBombGame\obj\Debug\PlaneBombGameClient.csproj.GenerateResource.cache
+C:\Users\rog\Desktop\DIR\C#\PlaneBombGame\obj\Debug\PlaneBombGameClient.csproj.CoreCompileInputs.cache
+C:\Users\rog\Desktop\DIR\C#\PlaneBombGame\obj\Debug\PlaneBombGame.exe
+C:\Users\rog\Desktop\DIR\C#\PlaneBombGame\obj\Debug\PlaneBombGame.pdb
+C:\Users\rog\Desktop\DIR\C#\PlaneBombGame\obj\Debug\PlaneBombGame.MovePlane.resources
