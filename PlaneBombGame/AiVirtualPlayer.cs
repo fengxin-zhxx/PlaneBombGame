@@ -23,6 +23,7 @@ namespace PlaneBombGame
         ArrayList VectorStore = new ArrayList();
         int[,] nowMap = new int[11, 11];
         int[,] nowCnt = new int[11, 11];
+        int[,] nowHeadCnt = new int[11, 11];
         // 0 UNKNOWN   1  MISS   2  HIT  3 KILL
 
         /*int Rest = 3;                                           //剩余飞机数量
@@ -88,19 +89,21 @@ namespace PlaneBombGame
             // 剩余的飞机方案
 
             Utils.ClearInts(nowCnt, 10, 10);
+            Utils.ClearInts(nowHeadCnt, 10, 10);
             foreach(Plane[] vectorPlanes in VectorStore)
             {
                 if (Judger.JudgeLegalPlanePlacement(nowMap, vectorPlanes)) // 如果当前方案符合
                 {
                     ResVector.Add(vectorPlanes);
                     Utils.AddPlanesOnMap(nowCnt, vectorPlanes);
+                    Utils.AddPlanesHeadsOnMap(nowHeadCnt, vectorPlanes);
                 }
             }
             VectorStore = ResVector;
             int count = VectorStore.Count;
             if(count == 1)
             {
-                AttackPoint[] atks = Utils.GetPlaneHeads((Plane[])VectorStore[0]);
+                AttackPoint[] atks = Utils.GetPlanesHeads((Plane[])VectorStore[0]);
                 foreach(AttackPoint atk in atks)
                 {
                     if (nowMap[atk.x, atk.y] == 0)
@@ -108,12 +111,11 @@ namespace PlaneBombGame
                         return atk;
                     }
                 }
-                MessageBox.Show("AI has won the game.");
                 throw new Exception("");
             }
             else
             {
-                int[] res = Utils.FindBest(nowCnt, VectorStore.Count);
+                int[] res = Utils.FindBest(nowCnt, nowHeadCnt, VectorStore.Count);
                 return new AttackPoint(res[0], res[1]);
             }
         }

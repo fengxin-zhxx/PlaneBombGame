@@ -52,7 +52,12 @@ namespace PlaneBombGame
         //人机对战  采用随机生成飞机  随即落点的方式
         private void button1_Click(object sender, EventArgs e)
         {
-            state  = new VirtualModeState();
+            BeginNewVirtualModeGame();
+        }
+
+        private void BeginNewVirtualModeGame()
+        {
+            state = new VirtualModeState();
             nowDir = 0;
             this.label1.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             label1.Text = label1Text + directions[nowDir];
@@ -60,18 +65,13 @@ namespace PlaneBombGame
             panel1.Invalidate();
             panel3.Invalidate();
             panel4.Invalidate();
-
             start = true;
-            state.SetLeftCount(0);
-            //state.SetAdversaryPlayer(new RandomVirtualPlayer()); //随机
-            state.SetAdversaryPlayer(new AiVirtualPlayer()); //AI
-
-            state.SetLocalPlayer(new LocalPlayer());
-
+            state.Init();
         }
 
+
         //人人对战  初始化 socket  Client 端  并生成state
-        private void button2_Click(object sender, EventArgs e)
+        private void BeginNewHumenModeState()
         {
             //socket = ClientSocket.getClientSocket();
             //socket.connectToServer();
@@ -79,13 +79,13 @@ namespace PlaneBombGame
             lastX = lastY = -1;
 
             socket = ServerSocket.getServerSocket();
-            socket.ListenClientConnect();   
+            socket.ListenClientConnect();
 
             //新建一个线程用于翻译接收到的信息
             Thread TransMessageThread = new Thread(transMessage);
             TransMessageThread.Start();
 
-            state = new HumanModeState();            
+            state = new HumanModeState();
             nowDir = 0;
             this.label1.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             label1.Text = label1Text + directions[nowDir];
@@ -97,6 +97,11 @@ namespace PlaneBombGame
             state.SetLeftCount(0);
             state.SetAdversaryPlayer(new HumanPlayer());
             state.SetLocalPlayer(new LocalPlayer());
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            BeginNewHumenModeState();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -298,6 +303,15 @@ namespace PlaneBombGame
 
                     state.DrawLastPoint(attackPoint, state.GetAdversaryPlayer(), panel4.CreateGraphics());
 
+                    if (Judger.JudgePlayerWin(state.GetLocalPlayer(), state.GetAdversaryPlayer()))
+                    {
+                        MessageBox.Show("You Won The Game!!");
+                        BeginNewVirtualModeGame();
+                        return;
+                    }
+
+                    /*TO DO Socket游戏结束时的信息传送*/
+
                     
                     if(state is HumanModeState)
                     {
@@ -309,6 +323,8 @@ namespace PlaneBombGame
                         chessDownCount++;
 
                         whoseTurn = false;//在对手下完棋之前不会再下棋
+
+                        /*TO DO Socket游戏结束时的判断*/
                     }
                     else
                     {
@@ -316,6 +332,12 @@ namespace PlaneBombGame
                         AttackPoint a = player.NextAttack();
                         string res = state.DrawLastPoint(a, state.GetLocalPlayer(), panel3.CreateGraphics());
                         player.AddAttackPoint(a, res);
+                        if (Judger.JudgePlayerWin(state.GetAdversaryPlayer(),state.GetLocalPlayer()))
+                        {
+                            MessageBox.Show("AI Won The Game!");
+                            BeginNewVirtualModeGame();
+                            return;
+                        }
                     }
 
                     

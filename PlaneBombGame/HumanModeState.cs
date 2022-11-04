@@ -93,4 +93,9 @@ internal class HumanModeState : State
         }
         return attackRes;
     }
+
+    public void Init()
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -237,5 +237,24 @@ namespace PlaneBombGame
             if (!JudgePlaneOverlap(X, Y, D, x, y, dir)) return false;
             return true;
         }
+
+        public static bool JudgePlayerWin(Player player, Player adversaryPlayer)
+        {
+            AttackPoint[] headAtks = Utils.GetPlanesHeads(adversaryPlayer.GetPlanes());
+            foreach(AttackPoint head in headAtks)
+            {
+                bool flag = false;
+                foreach(AttackPoint atk in player.GetAttackHistory())
+                {
+                    if(head.x == atk.x && head.y == atk.y)
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+                if (!flag) return false; // 还有飞机头没有被打到
+            }
+            return true;
+        }
     }
 }

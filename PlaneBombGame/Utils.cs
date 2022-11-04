@@ -62,6 +62,17 @@ namespace PlaneBombGame
             }
         }
 
+
+        //将可迭代的planes中每一个plane的head加入map地图中
+        public static void AddPlanesHeadsOnMap(int[,] map, IEnumerable planes)
+        {
+            foreach(Plane plane in planes)
+            {
+                AttackPoint atk = GetPlaneHead(plane);
+                map[atk.x, atk.y]++;
+            }
+        }
+
         public static void ClearInts(int[,] ints, int v1, int v2)
         {
             for(int i=0; i<= v1; i++)
@@ -73,27 +84,58 @@ namespace PlaneBombGame
             }
         }
 
-        internal static int[] FindBest(int[,] cnt, int count)
+        public static int CalculateValue(int hit,int head,int empty)
         {
-            int bx = 1, by = 1, Min = Math.Abs(cnt[1, 1] * 2 - count);
+            return hit * (head + empty) + head * (hit + empty) + empty * (hit + head);
+        }
+        // HitCnt 包含 HeadCnt, count = HitCnt + EmptyCnt
+        public static int[] FindBest(int[,] HitCnt, int[,] HeadCnt, int count)
+        {
+            int hitCnt = HitCnt[1, 1] - HeadCnt[1, 1];
+            int headCnt = HeadCnt[1, 1];
+            int emptyCnt = count - HitCnt[1, 1];
+
+            int bx = 1, by = 1;
+            long Max = CalculateValue(hitCnt, headCnt, emptyCnt);
             for(int i = 1; i <= 10; i++)
             {
                 for(int j = 1; j <= 10; j++)
                 {
-                    int delta = Math.Abs(cnt[i, j] * 2 - count);
-                    if (delta < Min)
+
+                    hitCnt = HitCnt[i, j] - HeadCnt[i, j];
+                    headCnt = HeadCnt[i, j];
+                    emptyCnt = count - HitCnt[i, j];
+                    long delta = CalculateValue(hitCnt, headCnt, emptyCnt);
+                    if (delta > Max)
                     {
                         bx = i;
                         by = j;
-                        Min = delta;
+                        Max = delta;
                     }
                 }
             }
-            Console.WriteLine(bx + " " + by + " " + Min);
+            Console.WriteLine(bx + " " + by + " " + Max);
             return new int[] { bx, by };
         }
-
-        internal static AttackPoint[] GetPlaneHeads(Plane[] planes)
+        public static AttackPoint GetPlaneHead(Plane plane)
+        {
+            int px = plane.x, py = plane.y;
+            switch (plane.direction)
+            {
+                case 0:
+                    return new AttackPoint(px + 1, py);
+                case 1:
+                    return new AttackPoint(px, py + 1);
+                case 2:
+                    return new AttackPoint(px - 1, py);
+                case 3:
+                    return new AttackPoint(px, py - 1);
+                default:
+                    break;
+            }
+            return null;
+        }
+        public static AttackPoint[] GetPlanesHeads(Plane[] planes)
         {
             AttackPoint[] result = new AttackPoint[planes.Length]; 
             int[] cnt = new int[] { 0, 2, 0, 1 };
@@ -101,24 +143,7 @@ namespace PlaneBombGame
             {
                 Plane plane = planes[i];
                 if (plane == null) continue;
-                int px = plane.x, py = plane.y;
-                switch (plane.direction)
-                {
-                    case 0:
-                        result[i] = new AttackPoint(px + 1, py);
-                        break;
-                    case 1:
-                        result[i] = new AttackPoint(px, py + 1);
-                        break;
-                    case 2:
-                        result[i] = new AttackPoint(px - 1, py);
-                        break;
-                    case 3:
-                        result[i] = new AttackPoint(px, py - 1);
-                        break;
-                    default:
-                        break;
-                }
+                result[i] = GetPlaneHead(plane);
             }
             return result;
         }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using static System.Windows.Forms.AxHost;
 
 namespace PlaneBombGame
 {
@@ -84,6 +85,14 @@ namespace PlaneBombGame
         public LocalPlayer GetLocalPlayer()
         {
             return localPlayer;
+        }
+
+        public void Init()
+        {
+            SetLeftCount(0);
+            //state.SetAdversaryPlayer(new RandomVirtualPlayer()); //随机
+            SetAdversaryPlayer(new AiVirtualPlayer()); //AI
+            SetLocalPlayer(new LocalPlayer());
         }
 
         public void SetAdversaryPlayer(Player player)

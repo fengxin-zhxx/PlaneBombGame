@@ -27,6 +27,7 @@ namespace PlaneBombGame
 
         void DrawPlane(Graphics g);
         // 绘画LocalPlayer放置的飞机
-        
+
+        void Init();
     }
 }
