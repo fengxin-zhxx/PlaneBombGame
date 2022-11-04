@@ -83,6 +83,7 @@ namespace PlaneBombGame
                 nowDir = (nowDir + 1) % 4;
                 form1.nowDir = nowDir;
                 form1.changeLable1Msg(null);
+                lastX = lastY = -1;
                 return;
             }
             int PlacementX = (e.X - StandardSize.toLeft) / StandardSize.BlockWidth;      // 求鼠标点击的X方向的第几个点位
@@ -101,6 +102,7 @@ namespace PlaneBombGame
                 //this.Invalidate();
                 //Graphics g = Graphics.FromImage(bitmap);
                 //g.Clear(this.BackColor);
+                lastX = lastY = -1;
                 if (state.GetLeftCount() == 3)
                 {
                     if (state is HumanModeState)
