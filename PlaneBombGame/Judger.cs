@@ -103,52 +103,7 @@ namespace PlaneBombGame
                 }
             }
             al.Add(plane);
-            foreach(Plane playerPlane in al)
-            {
-                if (playerPlane == null) continue;
-                int px = playerPlane.x, py = playerPlane.y;
-                switch (playerPlane.direction)
-                {
-                    case 0:
-                        for (int i = px + 1, j = 0; i >= px - 2; i--, j++)
-                        {
-                            for (int k = py - cnt[j]; k <= py + cnt[j]; k++)
-                            {
-                                map[i, k]++;
-                            }
-                        }
-                        break;
-                    case 1:
-                        for (int i = py + 1, j = 0; i >= py - 2; i--, j++)
-                        {
-                            for (int k = px - cnt[j]; k <= px + cnt[j]; k++)
-                            {
-                                map[k, i]++;
-                            }
-                        }
-                        break;
-                    case 2:
-                        for (int i = px - 1, j = 0; i <= px + 2; i++, j++)
-                        {
-                            for (int k = py - cnt[j]; k <= py + cnt[j]; k++)
-                            {
-                                map[i, k]++;
-                            }
-                        }
-                        break;
-                    case 3:
-                        for(int i = py - 1, j = 0; i <= py + 2; i++, j++)
-                        {
-                            for (int k = px - cnt[j]; k <= px + cnt[j]; k++)
-                            {
-                                map[k, i]++;
-                            }
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
+            Utils.AddPlanesOnMap(map, al);
             for(int i = 0; i <= StandardSize.BlockNum; i++)
             {   
                 for(int j = 0; j <= StandardSize.BlockNum; j++)
@@ -180,6 +135,82 @@ namespace PlaneBombGame
             if (!JudgePlaneOverlap(planes, plane)) return false;
             return true;
         }
+        public static bool JudgeLegalPlanePlacement(int[,] map, Plane[] planes)
+        {
+            bool[,] vis = new bool[11, 11];
+            int[] cnt = new int[] { 0, 2, 0, 1 };
+
+            foreach(Plane plane in planes)
+            {
+                int px = plane.x, py = plane.y;
+                switch (plane.direction)
+                {
+                    case 0:
+                        for (int i = px + 1, j = 0; i >= px - 2; i--, j++)
+                        {
+                            for (int k = py - cnt[j]; k <= py + cnt[j]; k++)
+                            {
+                                if (map[i, k] == 0) continue;
+                                vis[i, k] = true;
+                                if (map[i, k] == 1) return false;//MISS
+                                if (i == px + 1 && map[i, k] != 3) return false; // 应该是机头 
+                            }
+                        }
+                        break;
+                    case 1:
+                        for (int i = py + 1, j = 0; i >= py - 2; i--, j++)
+                        {
+                            for (int k = px - cnt[j]; k <= px + cnt[j]; k++)
+                            {
+                                if (map[k, i] == 0) continue;
+                                vis[k, i] = true;
+                                if (map[k, i] == 1) return false;//MISS
+                                if (i == py + 1 && map[k, i] != 3) return false; // 应该是机头 
+
+                            }
+                        }
+                        break;
+                    case 2:
+                        for (int i = px - 1, j = 0; i <= px + 2; i++, j++)
+                        {
+                            for (int k = py - cnt[j]; k <= py + cnt[j]; k++)
+                            {
+                                if (map[i, k] == 0) continue;
+                                vis[i, k] = true;
+                                if (map[i, k] == 1) return false;//MISS
+                                if (i == px - 1 && map[i, k] != 3) return false; // 应该是机头 
+                            }
+                        }
+                        break;
+                    case 3:
+                        for (int i = py - 1, j = 0; i <= py + 2; i++, j++)
+                        {
+                            for (int k = px - cnt[j]; k <= px + cnt[j]; k++)
+                            {
+                                if (map[k, i] == 0) continue;
+                                vis[k, i] = true;
+                                if (map[k, i] == 1) return false;//MISS
+                                if (i == py - 1 && map[k, i] != 3) return false; // 应该是机头 
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            
+            for(int i = 1; i <= 10; i++)
+            {
+                for(int j = 1; j <= 10; j++)
+                {
+                    if ((map[i, j] == 2 || map[i, j] == 3) && !vis[i, j]) // 已知但没被方案中的飞机访问
+                        return false;
+                }
+            }
+            return true;
+        }
+
+
         public static bool JudgeLegalPlacement(Player player, int x, int y)
         {
             foreach(AttackPoint a in player.GetAttackHistory())

@@ -76,10 +76,8 @@ internal class HumanModeState : State
     {
         this.localPlayer = player;
     }
-    public void DrawLastPoint(Player player, Player adversaryPlayer, Graphics g)
+    public string DrawLastPoint(AttackPoint a, Player adversaryPlayer, Graphics g)
     {
-        ArrayList ah = player.GetAttackHistory();
-        AttackPoint a = (AttackPoint)ah[ah.Count - 1];
         string attackRes = Judger.JudgeAttack(adversaryPlayer, a);
         switch (attackRes)
         {
@@ -93,5 +91,6 @@ internal class HumanModeState : State
                 a.Draw(g, Color.Gray);
                 break;
         }
+        return attackRes;
     }
 }

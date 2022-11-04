@@ -20,10 +20,8 @@ namespace PlaneBombGame
             throw new NotImplementedException();
         }
 
-        public void DrawLastPoint(Player player, Player adversaryPlayer, Graphics g)
+        public string DrawLastPoint(AttackPoint a, Player adversaryPlayer, Graphics g)
         {
-            ArrayList ah = player.GetAttackHistory();
-            AttackPoint a = (AttackPoint)ah[ah.Count - 1];
             string attackRes = Judger.JudgeAttack(adversaryPlayer, a);
             switch (attackRes)
             {
@@ -37,6 +35,7 @@ namespace PlaneBombGame
                     a.Draw(g, Color.Gray);
                     break;
             }
+            return attackRes;
         }
 
         public void DrawPlane(Graphics g)
@@ -90,6 +89,7 @@ namespace PlaneBombGame
         public void SetAdversaryPlayer(Player player)
         {
             adversaryPlayer = player;
+            player.Init();
         }
 
         public void SetLeftCount(int leftCount)

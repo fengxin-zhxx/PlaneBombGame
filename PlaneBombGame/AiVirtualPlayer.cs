@@ -18,13 +18,16 @@ namespace PlaneBombGame
         Plane[] planes;
 
         ArrayList attackHistory = new ArrayList();
-
         Random r = new Random(); // 以当前时间为随机数种子
 
-        int Rest = 3;                                           //剩余飞机数量
+        ArrayList VectorStore = new ArrayList();
+        int[,] nowMap = new int[11, 11];
+        int[,] nowCnt = new int[11, 11];
+        // 0 UNKNOWN   1  MISS   2  HIT  3 KILL
+
+        /*int Rest = 3;                                           //剩余飞机数量
         int[] X = new int[3], Y = new int[3], D = new int[3];   // X, Y, D 记录 DFS 过程中, 飞机存放的位置 
         int Cnt = 0;       // Cnt 表示合法的方案数 
-        ArrayList VectorStore = new ArrayList();
         void DFS(int x, int y)
         {
             if (Rest == 0)
@@ -62,10 +65,10 @@ namespace PlaneBombGame
             if (y == 9) DFS(x + 1, 1);
             else DFS(x, y + 1);
         }
-
+*/
         public void Init()
         {
-            for (int i = 0; i < 3; i++) D[i] = -1;
+            //for (int i = 0; i < 3; i++) D[i] = -1;
             //DFS(1, 1);
             string str = global::PlaneBombGame.Properties.Resources.All;
             string[] lines = str.Split('\n');
@@ -80,7 +83,39 @@ namespace PlaneBombGame
         }
         public AttackPoint NextAttack()
         {
-            return null;
+            int cnt = attackHistory.Count;
+            ArrayList ResVector = new ArrayList();
+            // 剩余的飞机方案
+
+            Utils.ClearInts(nowCnt, 10, 10);
+            foreach(Plane[] vectorPlanes in VectorStore)
+            {
+                if (Judger.JudgeLegalPlanePlacement(nowMap, vectorPlanes)) // 如果当前方案符合
+                {
+                    ResVector.Add(vectorPlanes);
+                    Utils.AddPlanesOnMap(nowCnt, vectorPlanes);
+                }
+            }
+            VectorStore = ResVector;
+            int count = VectorStore.Count;
+            if(count == 1)
+            {
+                AttackPoint[] atks = Utils.GetPlaneHeads((Plane[])VectorStore[0]);
+                foreach(AttackPoint atk in atks)
+                {
+                    if (nowMap[atk.x, atk.y] == 0)
+                    {
+                        return atk;
+                    }
+                }
+                MessageBox.Show("AI has won the game.");
+                throw new Exception("");
+            }
+            else
+            {
+                int[] res = Utils.FindBest(nowCnt, VectorStore.Count);
+                return new AttackPoint(res[0], res[1]);
+            }
         }
 
         public Plane[] GetPlanes()
@@ -98,9 +133,25 @@ namespace PlaneBombGame
             this.planes = GeneratePlanes();
         }
 
-        public void AddAttackPoint(AttackPoint attackPoint)
+        public void AddAttackPoint(AttackPoint attackPoint, string res = "")
         {
             attackHistory.Add(attackPoint);
+            int resNum = 0;
+            switch (res)
+            {
+                case "MISS":
+                    resNum = 1;
+                    break;
+                case "HIT":
+                    resNum = 2;
+                    break;
+                case "KILL":
+                    resNum = 3;
+                    break;
+                default:
+                    break;
+            }
+            nowMap[attackPoint.x, attackPoint.y] = resNum;
         }
 
         //TO DO 放置飞机策略(?) 随机是不是也可以?

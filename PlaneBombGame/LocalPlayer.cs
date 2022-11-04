@@ -60,7 +60,7 @@ namespace PlaneBombGame
             planes[index] = plane;
         }
 
-        public void AddAttackPoint(AttackPoint attackPoint)
+        public void AddAttackPoint(AttackPoint attackPoint, string res = "")
         {
             attackHistory.Add(attackPoint); 
         }
@@ -70,5 +70,9 @@ namespace PlaneBombGame
         {
         }
 
+        public void Init()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

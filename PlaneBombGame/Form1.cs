@@ -63,7 +63,9 @@ namespace PlaneBombGame
 
             start = true;
             state.SetLeftCount(0);
-            state.SetAdversaryPlayer(new RandomVirtualPlayer());
+            //state.SetAdversaryPlayer(new RandomVirtualPlayer()); //随机
+            state.SetAdversaryPlayer(new AiVirtualPlayer()); //AI
+
             state.SetLocalPlayer(new LocalPlayer());
 
         }
@@ -294,7 +296,7 @@ namespace PlaneBombGame
                     
                     state.GetLocalPlayer().AddAttackPoint(attackPoint); // 新的攻击点加入历史记录
 
-                    state.DrawLastPoint(state.GetLocalPlayer(), state.GetAdversaryPlayer(), panel4.CreateGraphics());
+                    state.DrawLastPoint(attackPoint, state.GetAdversaryPlayer(), panel4.CreateGraphics());
 
                     
                     if(state is HumanModeState)
@@ -311,8 +313,9 @@ namespace PlaneBombGame
                     else
                     {
                         Player player = state.GetAdversaryPlayer();
-                        player.AddAttackPoint(player.NextAttack());
-                        state.DrawLastPoint(state.GetAdversaryPlayer(), state.GetLocalPlayer(), panel3.CreateGraphics());
+                        AttackPoint a = player.NextAttack();
+                        string res = state.DrawLastPoint(a, state.GetLocalPlayer(), panel3.CreateGraphics());
+                        player.AddAttackPoint(a, res);
                     }
 
                     
@@ -370,7 +373,7 @@ namespace PlaneBombGame
                             //显示弹窗
                             MessageBox.Show(attackPoint.x + " " + attackPoint.y, "对方落子");
                             //绘制棋盘
-                            state.DrawLastPoint(state.GetAdversaryPlayer(), state.GetLocalPlayer(), panel3.CreateGraphics());
+                            state.DrawLastPoint(attackPoint, state.GetLocalPlayer(), panel3.CreateGraphics());
                             //允许下棋
                             whoseTurn = true;
                             break;
@@ -390,7 +393,6 @@ namespace PlaneBombGame
 
                 if (state.GetLeftCount() >= 3) return;
                 if (!Judger.JudgeLegalMouseDown(e.X, e.Y)) return;
-
 
                 int PlacementX = (e.X - StandardSize.toLeft) / StandardSize.BlockWidth;      // 求鼠标点击的X方向的第几个点位
                 int PlacementY = (e.Y - StandardSize.toTop) / StandardSize.BlockWidth;      // 求鼠标点击的Y方向的第几个点位
