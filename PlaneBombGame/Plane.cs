@@ -9,6 +9,30 @@ using System.Windows.Forms;
 
 namespace PlaneBombGame
 {
+    internal class PreviewPlane
+    {
+        public static PreviewPlane previewPlane = null;
+
+        public int x;        
+        public int y;        
+        public int dir;
+
+        public bool avaliable;
+        PreviewPlane()
+        {
+            x = 0; y = 0;dir = 0; avaliable = false;
+        }
+
+        public static PreviewPlane getPrePlane()
+        {
+            if(previewPlane == null)
+            {
+                previewPlane = new PreviewPlane();
+            }
+            return previewPlane;
+        }
+    }
+
     internal class Plane
     {
 

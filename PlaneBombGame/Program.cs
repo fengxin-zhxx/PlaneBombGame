@@ -15,12 +15,8 @@ namespace PlaneBombGame
         static void Main()
         {
             Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            //DateTime d1 = System.DateTime.Now;
-            //new AiVirtualPlayer().Init(); 
-            //DateTime d2 = System.DateTime.Now;
-            //MessageBox.Show(d1.ToString("o") + "\n" + d2.ToString("o"));
-            Application.Run(new Form1());
+            Application.SetCompatibleTextRenderingDefault(false);            
+            Application.Run(Form1.getForm1());
         }
     }
 }
