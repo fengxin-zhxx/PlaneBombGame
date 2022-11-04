@@ -101,6 +101,7 @@
     <None Include="Image\击中.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Image\icon%28已去底%29.png" />
     <Content Include="Image\爆炸.png" />
     <Content Include="Resource\All.txt" />
   </ItemGroup>
