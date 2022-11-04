@@ -156,6 +156,8 @@ namespace PlaneBombGame
                                 if (i == px + 1 && map[i, k] != 3) return false; // 应该是机头 
                             }
                         }
+
+
                         break;
                     case 1:
                         for (int i = py + 1, j = 0; i >= py - 2; i--, j++)

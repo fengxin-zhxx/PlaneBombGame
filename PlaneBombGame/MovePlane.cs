@@ -34,12 +34,13 @@ namespace PlaneBombGame
             InitializeComponent();
             form1 = Form1.getForm1();
             state = form1.state;
+            
         }
 
         private void MovePlane_Load(object sender, EventArgs e)
         {
             this.FormBorderStyle = FormBorderStyle.None;
-            this.Location = new Point(100 + 8, 70 + 30);
+            this.Location = new Point(form1.Location.X + 8, form1.Location.Y + 30 + 60);
             this.ShowInTaskbar = false;
         }
 
@@ -96,7 +97,10 @@ namespace PlaneBombGame
                 }
                 state.GetLocalPlayer().SetOnePlane(plane, state.GetLeftCount());
                 form1.setLocalPlane();
-                state.SetLeftCount(state.GetLeftCount() + 1);                
+                state.SetLeftCount(state.GetLeftCount() + 1);
+                //this.Invalidate();
+                //Graphics g = Graphics.FromImage(bitmap);
+                //g.Clear(this.BackColor);
                 if (state.GetLeftCount() == 3)
                 {
                     if (state is HumanModeState)
@@ -145,6 +149,10 @@ namespace PlaneBombGame
 
         private void panel1_MouseMove(object sender, MouseEventArgs e)
         {
+            if(form1.WindowState == FormWindowState.Minimized)
+            {
+                this.WindowState = FormWindowState.Minimized;
+            }
             if (!Judger.JudgeLegalMouseDown(e.X, e.Y)) return;
 
             int PlacementX = (e.X - StandardSize.toLeft) / StandardSize.BlockWidth;      // 求鼠标点击的X方向的第几个点位

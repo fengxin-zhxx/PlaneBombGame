@@ -112,6 +112,7 @@
             this.panel3.Size = new System.Drawing.Size(743, 901);
             this.panel3.TabIndex = 1;
             this.panel3.Paint += new System.Windows.Forms.PaintEventHandler(this.panel3_Paint);
+            this.panel3.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel3_MouseMove);
             // 
             // label2
             // 

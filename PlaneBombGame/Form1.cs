@@ -93,7 +93,8 @@ namespace PlaneBombGame
             panel4.Invalidate();
             start = true;
             state.SetLeftCount(0);
-            state.SetAdversaryPlayer(new RandomVirtualPlayer());
+            //state.SetAdversaryPlayer(new RandomVirtualPlayer());
+            state.SetAdversaryPlayer(new AiVirtualPlayer());
             state.SetLocalPlayer(new LocalPlayer());
             paintLoaclPlane();
 
@@ -398,12 +399,14 @@ namespace PlaneBombGame
 
         }
         private void paintLoaclPlane()
-        {                       
+        {
+            if (movePlaneForm != null) movePlaneForm.Close();
             movePlaneForm = new MovePlane();
             movePlaneForm.TransparencyKey = Color.Red;
             movePlaneForm.BackColor = Color.Red;            
             movePlaneForm.TopMost = true;
             movePlaneForm.Show();
+            movePlaneForm.Invalidate();
         }
 
         public void changeLable1Msg(String str)
@@ -423,9 +426,20 @@ namespace PlaneBombGame
         {                        
             if(movePlaneForm != null)
             {
-                movePlaneForm.reSetLocation(this.Location.X + 8, this.Location.Y + 30);;
+                movePlaneForm.reSetLocation(this.Location.X + 8, this.Location.Y + 30); 
             }
 
+        }
+
+        private void panel3_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (start)
+            {
+                if(movePlaneForm.WindowState == FormWindowState.Minimized)
+                {
+                    movePlaneForm.WindowState = FormWindowState.Normal;
+                }
+            }
         }
 
         public void setLocalPlane()
