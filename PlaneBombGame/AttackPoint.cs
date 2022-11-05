@@ -20,7 +20,7 @@ namespace PlaneBombGame
             this.y = y;
         }
 
-        public void Draw(Panel p, Color color)
+        public void Draw(Graphics g, Color color)
         {
 
             /*TO DO color*/
@@ -28,7 +28,6 @@ namespace PlaneBombGame
             if (color == Color.Red) flag = 1;
             else if (color == Color.Green) flag = 2;
 
-            Graphics g = p.CreateGraphics();                // 创建面板画布
 
             g.SmoothingMode = SmoothingMode.HighQuality;
             g.InterpolationMode = InterpolationMode.HighQualityBicubic;

@@ -22,7 +22,8 @@ namespace PlaneBombGame
         // 对于VirtualPlayer: 生成对应的Planes
         // 对于SocketPlayer:  接收对方放置的Planes
 
-        void AddAttackPoint(AttackPoint attackPoint);
+        void AddAttackPoint(AttackPoint attackPoint, string attackRes = "");
         ArrayList GetAttackHistory();
+        void Init();
     }
 }

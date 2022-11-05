@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
@@ -60,29 +61,35 @@ namespace PlaneBombGame
         }
         public static bool JudgeLegalPlaneCoordinate(Plane plane)
         {
-            switch (plane.direction)
+            return JudgeLegalPlaneCoordinate(plane.x, plane.y, plane.direction);
+        }
+
+        public static bool JudgeLegalPlaneCoordinate(int x,int y,int dir)
+        {
+            switch (dir)
             {
                 case 0:
-                    if (plane.x - 2 < 0 || plane.x + 1 > StandardSize.BlockNum) return false;
-                    if (plane.y - 2 < 0 || plane.y + 2 > StandardSize.BlockNum) return false;
+                    if (x - 2 < 1 || x + 1 > StandardSize.BlockNum) return false;
+                    if (y - 2 < 1 || y + 2 > StandardSize.BlockNum) return false;
                     break;
                 case 1:
-                    if (plane.x - 2 < 0 || plane.x + 2 > StandardSize.BlockNum) return false;
-                    if (plane.y - 2 < 0 || plane.y + 1 > StandardSize.BlockNum) return false;
+                    if (x - 2 < 1 || x + 2 > StandardSize.BlockNum) return false;
+                    if (y - 2 < 1 || y + 1 > StandardSize.BlockNum) return false;
                     break;
                 case 2:
-                    if (plane.x - 1 < 0 || plane.x + 2 > StandardSize.BlockNum) return false;
-                    if (plane.y - 2 < 0 || plane.y + 2 > StandardSize.BlockNum) return false;
+                    if (x - 1 < 1 || x + 2 > StandardSize.BlockNum) return false;
+                    if (y - 2 < 1 || y + 2 > StandardSize.BlockNum) return false;
                     break;
                 case 3:
-                    if (plane.x - 2 < 0 || plane.x + 2 > StandardSize.BlockNum) return false;
-                    if (plane.y - 1 < 0 || plane.y + 2 > StandardSize.BlockNum) return false;
+                    if (x - 2 < 1 || x + 2 > StandardSize.BlockNum) return false;
+                    if (y - 1 < 1 || y + 2 > StandardSize.BlockNum) return false;
                     break;
                 default:
                     break;
             }
             return true;
         }
+
         public static bool JudgePlaneOverlap(Plane[] planes, Plane plane)
         {
             int[,] map = new int[11, 11];
@@ -96,52 +103,7 @@ namespace PlaneBombGame
                 }
             }
             al.Add(plane);
-            foreach(Plane playerPlane in al)
-            {
-                if (playerPlane == null) break;
-                int px = playerPlane.x, py = playerPlane.y;
-                switch (playerPlane.direction)
-                {
-                    case 0:
-                        for (int i = px + 1, j = 0; i >= px - 2; i--, j++)
-                        {
-                            for (int k = py - cnt[j]; k <= py + cnt[j]; k++)
-                            {
-                                map[i, k]++;
-                            }
-                        }
-                        break;
-                    case 1:
-                        for (int i = py + 1, j = 0; i >= py - 2; i--, j++)
-                        {
-                            for (int k = px - cnt[j]; k <= px + cnt[j]; k++)
-                            {
-                                map[k, i]++;
-                            }
-                        }
-                        break;
-                    case 2:
-                        for (int i = px - 1, j = 0; i <= px + 2; i++, j++)
-                        {
-                            for (int k = py - cnt[j]; k <= py + cnt[j]; k++)
-                            {
-                                map[i, k]++;
-                            }
-                        }
-                        break;
-                    case 3:
-                        for(int i = py - 1, j = 0; i <= py + 2; i++, j++)
-                        {
-                            for (int k = px - cnt[j]; k <= px + cnt[j]; k++)
-                            {
-                                map[k, i]++;
-                            }
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
+            Utils.AddPlanesOnMap(map, al);
             for(int i = 0; i <= StandardSize.BlockNum; i++)
             {   
                 for(int j = 0; j <= StandardSize.BlockNum; j++)
@@ -151,6 +113,19 @@ namespace PlaneBombGame
             }
             return true;
         }
+
+        public static bool JudgePlaneOverlap(int[] X, int[] Y, int[] D, int x, int y, int dir) {
+            Plane[] planes = new Plane[3];
+            for(int i = 0; i < 3; i++)
+            {
+                if (D[i] != -1)
+                {
+                    planes[i] = new Plane(X[i], Y[i], D[i]);
+                }
+            }
+            return JudgePlaneOverlap(planes, new Plane(x, y, dir));
+        }
+
         public static bool JudgeLegalPlanePlacement(Plane[] planes, Plane plane)
         {
             if (plane == null) return false;
@@ -160,6 +135,84 @@ namespace PlaneBombGame
             if (!JudgePlaneOverlap(planes, plane)) return false;
             return true;
         }
+        public static bool JudgeLegalPlanePlacement(int[,] map, Plane[] planes)
+        {
+            bool[,] vis = new bool[11, 11];
+            int[] cnt = new int[] { 0, 2, 0, 1 };
+
+            foreach(Plane plane in planes)
+            {
+                int px = plane.x, py = plane.y;
+                switch (plane.direction)
+                {
+                    case 0:
+                        for (int i = px + 1, j = 0; i >= px - 2; i--, j++)
+                        {
+                            for (int k = py - cnt[j]; k <= py + cnt[j]; k++)
+                            {
+                                if (map[i, k] == 0) continue;
+                                vis[i, k] = true;
+                                if (map[i, k] == 1) return false;//MISS
+                                if (i == px + 1 && map[i, k] != 3) return false; // 应该是机头 
+                            }
+                        }
+
+
+                        break;
+                    case 1:
+                        for (int i = py + 1, j = 0; i >= py - 2; i--, j++)
+                        {
+                            for (int k = px - cnt[j]; k <= px + cnt[j]; k++)
+                            {
+                                if (map[k, i] == 0) continue;
+                                vis[k, i] = true;
+                                if (map[k, i] == 1) return false;//MISS
+                                if (i == py + 1 && map[k, i] != 3) return false; // 应该是机头 
+
+                            }
+                        }
+                        break;
+                    case 2:
+                        for (int i = px - 1, j = 0; i <= px + 2; i++, j++)
+                        {
+                            for (int k = py - cnt[j]; k <= py + cnt[j]; k++)
+                            {
+                                if (map[i, k] == 0) continue;
+                                vis[i, k] = true;
+                                if (map[i, k] == 1) return false;//MISS
+                                if (i == px - 1 && map[i, k] != 3) return false; // 应该是机头 
+                            }
+                        }
+                        break;
+                    case 3:
+                        for (int i = py - 1, j = 0; i <= py + 2; i++, j++)
+                        {
+                            for (int k = px - cnt[j]; k <= px + cnt[j]; k++)
+                            {
+                                if (map[k, i] == 0) continue;
+                                vis[k, i] = true;
+                                if (map[k, i] == 1) return false;//MISS
+                                if (i == py - 1 && map[k, i] != 3) return false; // 应该是机头 
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            
+            for(int i = 1; i <= 10; i++)
+            {
+                for(int j = 1; j <= 10; j++)
+                {
+                    if ((map[i, j] == 2 || map[i, j] == 3) && !vis[i, j]) // 已知但没被方案中的飞机访问
+                        return false;
+                }
+            }
+            return true;
+        }
+
+
         public static bool JudgeLegalPlacement(Player player, int x, int y)
         {
             foreach(AttackPoint a in player.GetAttackHistory())
@@ -169,13 +222,40 @@ namespace PlaneBombGame
             return true;
         }
     
-        public static bool JudgeLegalMouseDown(MouseEventArgs e)
+
+        public static bool JudgeLegalMouseDown(int X, int Y)
         {
-            if (   e.Y < StandardSize.toTop 
-                || e.X < StandardSize.toLeft 
-                || e.Y >= StandardSize.toTop + (StandardSize.BlockNum + 1) * StandardSize.BlockWidth 
-                || e.X >= StandardSize.toLeft + (StandardSize.BlockNum + 1) * StandardSize.BlockWidth
+            if (Y < StandardSize.toTop + +StandardSize.BlockWidth
+                || X < StandardSize.toLeft + +StandardSize.BlockWidth
+                || Y >= StandardSize.toTop + (StandardSize.BlockNum + 1) * StandardSize.BlockWidth
+                || X >= StandardSize.toLeft + (StandardSize.BlockNum + 1) * StandardSize.BlockWidth
                 ) return false;
+            return true;
+        }
+
+        public static bool JudgeLegalPlanePlacement(int[] X, int[] Y, int[] D, int x, int y, int dir)
+        {
+            if (!JudgeLegalPlaneCoordinate(x, y, dir)) return false;
+            if (!JudgePlaneOverlap(X, Y, D, x, y, dir)) return false;
+            return true;
+        }
+
+        public static bool JudgePlayerWin(Player player, Player adversaryPlayer)
+        {
+            AttackPoint[] headAtks = Utils.GetPlanesHeads(adversaryPlayer.GetPlanes());
+            foreach(AttackPoint head in headAtks)
+            {
+                bool flag = false;
+                foreach(AttackPoint atk in player.GetAttackHistory())
+                {
+                    if(head.x == atk.x && head.y == atk.y)
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+                if (!flag) return false; // 还有飞机头没有被打到
+            }
             return true;
         }
     }

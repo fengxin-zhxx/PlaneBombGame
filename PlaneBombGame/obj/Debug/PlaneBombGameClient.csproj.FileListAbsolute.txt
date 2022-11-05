@@ -31,6 +31,16 @@ D:\Projects\C Sharp\PlaneBombGame\PlaneBombGame\obj\Debug\PlaneBombGame.pdb
 D:\Projects\C Sharp\PlaneBombGame\PlaneBombGame\bin\Debug\PlaneBombGame.exe.config
 D:\Projects\C Sharp\PlaneBombGame\PlaneBombGame\bin\Debug\PlaneBombGame.exe
 D:\Projects\C Sharp\PlaneBombGame\PlaneBombGame\bin\Debug\PlaneBombGame.pdb
+C:\Users\fufufufufu\Documents\GitHub\PlaneBombGame\PlaneBombGame\bin\Debug\PlaneBombGame.exe.config
+C:\Users\fufufufufu\Documents\GitHub\PlaneBombGame\PlaneBombGame\bin\Debug\PlaneBombGame.exe
+C:\Users\fufufufufu\Documents\GitHub\PlaneBombGame\PlaneBombGame\bin\Debug\PlaneBombGame.pdb
+C:\Users\fufufufufu\Documents\GitHub\PlaneBombGame\PlaneBombGame\obj\Debug\PlaneBombGameClient.csprojAssemblyReference.cache
+C:\Users\fufufufufu\Documents\GitHub\PlaneBombGame\PlaneBombGame\obj\Debug\PlaneBombGame.Form1.resources
+C:\Users\fufufufufu\Documents\GitHub\PlaneBombGame\PlaneBombGame\obj\Debug\PlaneBombGame.Properties.Resources.resources
+C:\Users\fufufufufu\Documents\GitHub\PlaneBombGame\PlaneBombGame\obj\Debug\PlaneBombGameClient.csproj.GenerateResource.cache
+C:\Users\fufufufufu\Documents\GitHub\PlaneBombGame\PlaneBombGame\obj\Debug\PlaneBombGameClient.csproj.CoreCompileInputs.cache
+C:\Users\fufufufufu\Documents\GitHub\PlaneBombGame\PlaneBombGame\obj\Debug\PlaneBombGame.exe
+C:\Users\fufufufufu\Documents\GitHub\PlaneBombGame\PlaneBombGame\obj\Debug\PlaneBombGame.pdb
 C:\Users\rog\Desktop\DIR\C#\PlaneBombGame\bin\Debug\PlaneBombGame.exe.config
 C:\Users\rog\Desktop\DIR\C#\PlaneBombGame\bin\Debug\PlaneBombGame.exe
 C:\Users\rog\Desktop\DIR\C#\PlaneBombGame\bin\Debug\PlaneBombGame.pdb
@@ -42,3 +52,5 @@ C:\Users\rog\Desktop\DIR\C#\PlaneBombGame\obj\Debug\PlaneBombGameClient.csproj.G
 C:\Users\rog\Desktop\DIR\C#\PlaneBombGame\obj\Debug\PlaneBombGameClient.csproj.CoreCompileInputs.cache
 C:\Users\rog\Desktop\DIR\C#\PlaneBombGame\obj\Debug\PlaneBombGame.exe
 C:\Users\rog\Desktop\DIR\C#\PlaneBombGame\obj\Debug\PlaneBombGame.pdb
+C:\Users\rog\Desktop\DIR\C#\PlaneBombGame\obj\Debug\PlaneBombGame.MovePlane.resources
+D:\Projects\C Sharp\PlaneBombGame\PlaneBombGame\obj\Debug\PlaneBombGame.MovePlane.resources

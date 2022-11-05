@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,14 +19,15 @@ namespace PlaneBombGame
         void SetLocalPlayer(LocalPlayer player);
         LocalPlayer GetLocalPlayer();
         
-        void DrawPoint(Player player, Player adversaryPlayer, Panel panel);
+        void DrawPoint(Player player, Player adversaryPlayer, Graphics g);
         //绘画player的攻击点, 以adversaryPlayer的Planes为结果判断依据
 
-        void DrawLastPoint(Player player, Player adversaryPlayer, Panel panel);
-        //绘画player的攻击点, 以adversaryPlayer的Planes为结果判断依据
+        string DrawLastPoint(AttackPoint a, Player adversaryPlayer, Graphics g);
+        //绘画player的攻击点, 以adversaryPlayer的Planes为结果判断依据, 并返回攻击的结果
 
-        void DrawPlane(Panel panel);
+        void DrawPlane(Graphics g);
         // 绘画LocalPlayer放置的飞机
-        
+
+        void Init();
     }
 }

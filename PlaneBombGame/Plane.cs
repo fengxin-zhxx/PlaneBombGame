@@ -9,6 +9,30 @@ using System.Windows.Forms;
 
 namespace PlaneBombGame
 {
+    internal class PreviewPlane
+    {
+        public static PreviewPlane previewPlane = null;
+
+        public int x;        
+        public int y;        
+        public int dir;
+
+        public bool avaliable;
+        PreviewPlane()
+        {
+            x = 0; y = 0;dir = 0; avaliable = false;
+        }
+
+        public static PreviewPlane getPrePlane()
+        {
+            if(previewPlane == null)
+            {
+                previewPlane = new PreviewPlane();
+            }
+            return previewPlane;
+        }
+    }
+
     internal class Plane
     {
 
@@ -24,8 +48,7 @@ namespace PlaneBombGame
         }
 
         //加入飞机方向判断
-        public void Draw(Panel p) {
-            Graphics g = p.CreateGraphics();                // 创建面板画布
+        public void Draw(Graphics g, bool isPreviewPlane = false) {
 
             g.SmoothingMode = SmoothingMode.HighQuality;
             g.InterpolationMode = InterpolationMode.HighQualityBicubic;
@@ -62,7 +85,9 @@ namespace PlaneBombGame
             for (int i = 0; i < 3; i++) {
                 g.DrawRectangle(pen, recs[direction * 3 + i]);
             }*/
-            SolidBrush brush = new SolidBrush(Color.Thistle);
+            SolidBrush brush;
+            if (!isPreviewPlane) brush = new SolidBrush(Color.Thistle);
+            else brush = new SolidBrush(Color.Pink);
             for (int i = 0; i < 3; i++) {
                 g.FillRectangle(brush, recs[direction * 3 + i]);
             }
@@ -113,7 +138,10 @@ namespace PlaneBombGame
 
             //g.FillEllipse(new SolidBrush(Color.Blue), AccurateX, AccurateY, StandardSize.BlockWidth, StandardSize.BlockWidth);
         }
-
+        public override string ToString()
+        {
+            return "" + x + " " + y + " " + direction;
+        }
 
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PlaneBombGame
 {
-    internal class VirtualPlayer : Player
+    internal class RandomVirtualPlayer : Player
     {
 
         Plane[] planes { get; set; }
@@ -16,9 +16,9 @@ namespace PlaneBombGame
 
         Random r = new Random(); // 以当前时间为随机数种子
 
+
         public AttackPoint NextAttack()
         {
-
             return new AttackPoint(r.Next(1, 10), r.Next(1, 10));
         }
 
@@ -37,7 +37,7 @@ namespace PlaneBombGame
             this.planes = GeneratePlanes();
         }
 
-        public void AddAttackPoint(AttackPoint attackPoint)
+        public void AddAttackPoint(AttackPoint attackPoint, string res = "")
         {
             attackHistory.Add(attackPoint);
         }
@@ -57,6 +57,11 @@ namespace PlaneBombGame
                 res[i] = plane;
             }
             return res;
+        }
+
+        public void Init()
+        {
+            throw new NotImplementedException();
         }
     }
 }

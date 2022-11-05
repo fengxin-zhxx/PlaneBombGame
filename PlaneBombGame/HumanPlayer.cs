@@ -27,7 +27,7 @@ namespace PlaneBombGame
             this.planes = planes;
         }
 
-        public void AddAttackPoint(AttackPoint attackPoint)
+        public void AddAttackPoint(AttackPoint attackPoint, string res = "")
         {
             attackHistory.Add(attackPoint);
         }
@@ -37,5 +37,9 @@ namespace PlaneBombGame
             return attackHistory;
         }
 
+        public void Init()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
