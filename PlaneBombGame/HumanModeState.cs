@@ -14,10 +14,9 @@ internal class HumanModeState : State
     private Player adversaryPlayer;
 
 
-    public void DrawPlane(Graphics g)
+    public void DrawPlane(Player player, Graphics g)
     {
-        Plane[] planes = localPlayer.GetPlanes();
-        foreach (Plane plane in planes)
+        foreach (Plane plane in player.GetPlanes())
         {
             if (plane != null)
                 plane.Draw(g);

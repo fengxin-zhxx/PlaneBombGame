@@ -156,7 +156,7 @@ namespace PlaneBombGame
             PlayingBoard.DrawCB(g);
             if (state != null)
             {
-                state.DrawPlane(g);
+                state.DrawPlane(state.GetLocalPlayer(), g);
                 state.DrawPoint(state.GetAdversaryPlayer(), state.GetLocalPlayer(), g);
                 if (lastX != -1)
                 {
@@ -257,6 +257,10 @@ namespace PlaneBombGame
                         player.AddAttackPoint(a, res);
                         if (Judger.JudgePlayerWin(state.GetAdversaryPlayer(),state.GetLocalPlayer()))
                         {
+                            Graphics g = Graphics.FromImage(bitmap);
+                            state.DrawPlane(state.GetAdversaryPlayer(), g);
+                            state.DrawPoint(state.GetLocalPlayer(), state.GetAdversaryPlayer(), g);
+                            panel4.CreateGraphics().DrawImage(bitmap, 0, 0);
                             MessageBox.Show("AI Won The Game!");
                             BeginNewVirtualModeGame();
                             return;
@@ -444,7 +448,7 @@ namespace PlaneBombGame
 
         public void setLocalPlane()
         {
-            state.DrawPlane(panel3.CreateGraphics());
+            state.DrawPlane(state.GetLocalPlayer(), panel3.CreateGraphics());
         }
 
     }
