@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaneBombGameClient", "PlaneBombGame\PlaneBombGameClient.csproj", "{B0D8F220-35B8-4222-ACEC-9A9CF95B24BF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaneBombGame", "PlaneBombGame\PlaneBombGame.csproj", "{B0D8F220-35B8-4222-ACEC-9A9CF95B24BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
