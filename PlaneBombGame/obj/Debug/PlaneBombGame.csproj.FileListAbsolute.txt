@@ -31,3 +31,4 @@ C:\Users\rog\Desktop\DIR\C#\PlaneBombGame\obj\Debug\PlaneBombGame.csproj.CoreCom
 C:\Users\rog\Desktop\DIR\C#\PlaneBombGame\obj\Debug\PlaneBombGame.exe
 C:\Users\rog\Desktop\DIR\C#\PlaneBombGame\obj\Debug\PlaneBombGame.pdb
 C:\Users\rog\Desktop\DIR\C#\PlaneBombGame\obj\Debug\PlaneBombGame.BaseInfoSet.resources
+C:\Users\rog\Desktop\DIR\C#\PlaneBombGame\obj\Debug\PlaneBombGame.MovePlane.resources

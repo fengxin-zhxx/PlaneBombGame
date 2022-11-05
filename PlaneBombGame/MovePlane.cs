@@ -33,8 +33,7 @@ namespace PlaneBombGame
         {
             InitializeComponent();
             form1 = Form1.getForm1();
-            state = form1.state;
-            
+            state = form1.state;            
         }
 
         private void MovePlane_Load(object sender, EventArgs e)
@@ -54,19 +53,9 @@ namespace PlaneBombGame
         private void movePlane_Paint(object sender, PaintEventArgs e)
         {            
             Graphics g = Graphics.FromImage(bitmap);
-            g.Clear(this.BackColor);
-           
+            g.Clear(this.BackColor);           
             if (state != null)
             {
-/*                Plane[] planes = state.GetLocalPlayer().GetPlanes();
-                for (int i = planes.Length - 1; i >= 0; i--)
-                {
-                    if (planes[i] != null)
-                    {
-                        planes[i].Draw(g);
-                        break;
-                    }
-                }*/
                 if (lastX != -1)
                 {
                     state.GetLocalPlayer().GetPreviewPlane().Draw(g, true);
@@ -86,8 +75,17 @@ namespace PlaneBombGame
                 lastX = lastY = -1;
                 return;
             }
+
+            if(state is HumanModeState && form1.isConnected == false)
+            {
+                MessageBox.Show("请等待云端接入后再放置您的飞机", "提示");
+                return;
+            }
+
+
             int PlacementX = (e.X - StandardSize.toLeft) / StandardSize.BlockWidth;      // 求鼠标点击的X方向的第几个点位
             int PlacementY = (e.Y - StandardSize.toTop)  / StandardSize.BlockWidth;      // 求鼠标点击的Y方向的第几个点位
+            
             try
             {
                 Plane plane = new Plane(PlacementX, PlacementY, nowDir);
@@ -96,12 +94,13 @@ namespace PlaneBombGame
                     MessageBox.Show("位置不合法, 请重新放置", "提示");
                     return;
                 }
+                
                 state.GetLocalPlayer().SetOnePlane(plane, state.GetLeftCount());
+                
                 form1.setLocalPlane();
+                
                 state.SetLeftCount(state.GetLeftCount() + 1);
-                //this.Invalidate();
-                //Graphics g = Graphics.FromImage(bitmap);
-                //g.Clear(this.BackColor);
+
                 lastX = lastY = -1;
                 if (state.GetLeftCount() == 3)
                 {
@@ -126,14 +125,14 @@ namespace PlaneBombGame
                         if (form1.isEnemySetAllPlanes == false)
                         {
                             MessageBox.Show("请等待对手放置完Ta的飞机", "提示");
+                            this.Close();
                             return;
                         }
 
                         MessageBox.Show("对手已经放置完Ta的飞机", "提示");
 
-                        Plane[] showPlanes = state.GetAdversaryPlayer().GetPlanes();
-
-                        MessageBox.Show(showPlanes[0].x + " " + showPlanes[0].y + "  " + showPlanes[1].x + " " + showPlanes[1].y + "  " + showPlanes[2].x + " " + showPlanes[2].y, "对方放置飞机");
+                        //Plane[] showPlanes = state.GetAdversaryPlayer().GetPlanes();
+                        //MessageBox.Show(showPlanes[0].x + " " + showPlanes[0].y + "  " + showPlanes[1].x + " " + showPlanes[1].y + "  " + showPlanes[2].x + " " + showPlanes[2].y, "对方放置飞机");
                     }
                     else
                     {
