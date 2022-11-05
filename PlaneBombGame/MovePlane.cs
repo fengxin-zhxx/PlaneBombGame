@@ -83,6 +83,7 @@ namespace PlaneBombGame
                 nowDir = (nowDir + 1) % 4;
                 form1.nowDir = nowDir;
                 form1.changeLable1Msg(null);
+                lastX = lastY = -1;
                 return;
             }
             int PlacementX = (e.X - StandardSize.toLeft) / StandardSize.BlockWidth;      // 求鼠标点击的X方向的第几个点位
