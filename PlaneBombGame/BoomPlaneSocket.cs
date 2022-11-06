@@ -1,39 +1,118 @@
-﻿using System.Net.Sockets;
+﻿using System;
 using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System;
 
 namespace PlaneBombGame
 {
-    internal class ClientSocket
+    internal class BoomPlaneSocket 
     {
         static Socket clientSocket;
+        
+        static Socket serverSocket;
 
-        private static ClientSocket socket = null;
+        private static BoomPlaneSocket socket = null;
 
         public bool isConnected = false;
 
-        private IPAddress ip = IPAddress.Parse("127.0.0.1");
+        public IPAddress ip ;
 
-        private int port = 8885;
+        public int port;
 
         public string receiveStr = "";
 
         public string sendStr = "";
 
-        ClientSocket()
+        BoomPlaneSocket(bool clientOrServer , IPAddress newIp , int newPort)
         {
-            clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            if (clientOrServer)
+            {
+                clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                ip = newIp;
+                port = newPort;
+            }
+            else
+            {
+                serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                serverSocket.Bind(new IPEndPoint(newIp, newPort));
+                serverSocket.Listen(1);
+            }
         }
 
-        public static ClientSocket getClientSocket()
+        public static BoomPlaneSocket getSocket(bool clientOrSocket, IPAddress newIp, int newPort)
         {
             if (socket == null)
             {
-                socket = new ClientSocket();
+                socket = new BoomPlaneSocket(clientOrSocket,newIp,newPort);
             }
             return socket;
+        }
+
+        public void ListenClientConnect()
+        {
+            Thread goListenThread = new Thread(keepListening);
+            goListenThread.Start();
+        }
+
+        public void keepListening()
+        {
+            while (true)
+            {
+                clientSocket = serverSocket.Accept();
+
+                isConnected = true;
+
+                Thread receiveThread = new Thread(revFromClient);
+                receiveThread.Start();
+
+                Thread sendThred = new Thread(sendToClient);
+                sendThred.Start();
+            }
+        }
+
+        private void revFromClient()
+        {
+            while (true)
+            {
+                try
+                {
+                    byte[] result = new byte[1024];
+                    int receiveNumber = clientSocket.Receive(result);
+                    receiveStr = Encoding.ASCII.GetString(result, 0, receiveNumber);
+                }
+                catch (Exception ex)
+                {
+                    isConnected = false;
+                    Console.WriteLine(ex.Message);
+                    clientSocket.Shutdown(SocketShutdown.Both);
+                    clientSocket.Close();
+                    break;
+                }
+            }
+        }
+
+        private void sendToClient()
+        {
+            while (true)
+            {
+                try
+                {
+                    if (sendStr != "")
+                    {
+                        clientSocket.Send(Encoding.ASCII.GetBytes(sendStr.ToString()));
+                        sendStr = "";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    isConnected = false;
+                    Console.WriteLine(ex.Message);
+                    clientSocket.Shutdown(SocketShutdown.Both);
+                    clientSocket.Close();
+                    break;
+                }
+            }
         }
 
         public void connectToServer()
@@ -44,7 +123,6 @@ namespace PlaneBombGame
                 isConnected = true;
                 Thread revServerThread = new Thread(revFromServer);
                 revServerThread.Start();
-
                 Thread sendServerThread = new Thread(sendToServer);
                 sendServerThread.Start();
             }
@@ -53,7 +131,6 @@ namespace PlaneBombGame
                 Thread TryToConnect = new Thread(tryToConnectToServer);
                 TryToConnect.Start();
             }
-
         }
 
         private void tryToConnectToServer()
@@ -89,7 +166,6 @@ namespace PlaneBombGame
                     byte[] result = new byte[1024];
                     int receiveLength = clientSocket.Receive(result);
                     receiveStr = Encoding.ASCII.GetString(result, 0, receiveLength);
-
                 }
                 catch (Exception ex)
                 {

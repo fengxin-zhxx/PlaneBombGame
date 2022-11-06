@@ -72,9 +72,20 @@ namespace PlaneBombGame
         {
             while (true)
             {
-                byte[] result = new byte[1024];
-                int receiveNumber = clientSocket.Receive(result);
-                receiveStr = Encoding.ASCII.GetString(result, 0, receiveNumber);
+                try
+                {
+                    byte[] result = new byte[1024];
+                    int receiveNumber = clientSocket.Receive(result);
+                    receiveStr = Encoding.ASCII.GetString(result, 0, receiveNumber);
+                }
+                catch(Exception ex)
+                {
+                    isConnected = false; 
+                    Console.WriteLine(ex.Message);
+                    clientSocket.Shutdown(SocketShutdown.Both);
+                    clientSocket.Close();
+                    break;
+                }
             }
         }
 
@@ -82,10 +93,21 @@ namespace PlaneBombGame
         {
             while (true)
             {
-                if (sendStr != "")
+                try
                 {
-                    clientSocket.Send(Encoding.ASCII.GetBytes(sendStr.ToString()));
-                    sendStr = "";
+                    if (sendStr != "")
+                    {
+                        clientSocket.Send(Encoding.ASCII.GetBytes(sendStr.ToString()));
+                        sendStr = "";
+                    }
+                }  
+                catch (Exception ex)
+                {
+                    isConnected = false;
+                    Console.WriteLine(ex.Message);
+                    clientSocket.Shutdown(SocketShutdown.Both);
+                    clientSocket.Close();
+                    break;
                 }
             }
         }
