@@ -50,6 +50,7 @@ namespace PlaneBombGame
 
         public bool isEnemyReadyForGame = false;
 
+
         internal static Form1 getForm1()
         {
             if (form1 == null)
@@ -462,7 +463,6 @@ namespace PlaneBombGame
                                 }
                                 aNewGameStart = true;
                             }
-
                             else
                             {
                                 //显示文字

@@ -69,6 +69,17 @@
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
+            // label4
+            // 
+            this.label4.Font = new System.Drawing.Font("宋体", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label4.Location = new System.Drawing.Point(892, 4);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(589, 48);
+            this.label4.TabIndex = 5;
+            this.label4.Text = "请选择想要进行的模式";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label4.Click += new System.EventHandler(this.label4_Click);
+            // 
             // label1
             // 
             this.label1.BackColor = System.Drawing.SystemColors.ControlLight;
