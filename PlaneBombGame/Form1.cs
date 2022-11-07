@@ -173,6 +173,7 @@ namespace PlaneBombGame
             catch (ArgumentNullException)
             {
 
+            
             }
         }
 
@@ -554,7 +555,7 @@ namespace PlaneBombGame
                 if (label4.InvokeRequired)
                 {
                     Action<string> actionDelegate = (x) => { this.label4.Text = x.ToString(); };
-                    this.label4.Invoke(actionDelegate, "2号落子：" + firstAttackPoint.x + " " + firstAttackPoint.y);
+                    this.label4.Invoke(actionDelegate, "2号落子：" + secondAttackPoint.x + " " + secondAttackPoint.y);
                 }
                 
                 res = state.DrawLastPoint(secondAttackPoint, state.getFirstAiPlayer(), panel3.CreateGraphics());
