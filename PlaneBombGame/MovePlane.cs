@@ -164,12 +164,17 @@ namespace PlaneBombGame
 
                         MessageBox.Show("对手已经放置完Ta的飞机", "提示");
 
-                        //Plane[] showPlanes = state.GetAdversaryPlayer().GetPlanes();
-                        //MessageBox.Show(showPlanes[0].x + " " + showPlanes[0].y + "  " + showPlanes[1].x + " " + showPlanes[1].y + "  " + showPlanes[2].x + " " + showPlanes[2].y, "对方放置飞机");
-                    }
+                        Plane[] showPlanes = state.GetAdversaryPlayer().GetPlanes();
+                        }
                     else
                     {
                         state.GetAdversaryPlayer().SetPlanes(null);
+                        Plane[] planes = state.GetAdversaryPlayer().GetPlanes();
+                        Console.WriteLine("对方放置飞机\"(" + planes[0].x + " " + planes[0].y + " ," + planes[0].direction + ") (" 
+                                        + planes[1].x + " " + planes[1].y + " ," + planes[1].direction + ") (" 
+                                        + planes[2].x + " " + planes[2].y + " ," + planes[2].direction + ")"
+                                        );
+
                     }
                     MessageBox.Show("按确认开始对战", "提示");
                     form1.changeLable1Msg("点击右侧方格以攻击对手");

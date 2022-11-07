@@ -317,6 +317,8 @@ namespace PlaneBombGame
                     {
                         if (Judger.JudgePlayerWin(state.GetLocalPlayer(), state.GetAdversaryPlayer()))
                         {
+                            state.DrawPlane(panel4.CreateGraphics(), false);
+                            state.DrawPoint(state.GetLocalPlayer(), state.GetAdversaryPlayer(), panel4.CreateGraphics());
                             MessageBox.Show("You Won The Game!!");
                             BeginNewVirtualModeGame();                            
                             return;
