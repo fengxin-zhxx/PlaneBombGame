@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace PlaneBombGame
 {
-    internal class BoomPlaneSocket
+    internal class BoomPlaneSocket 
     {
         static Socket clientSocket;
         
@@ -16,9 +16,9 @@ namespace PlaneBombGame
 
         public bool isConnected = false;
 
-        public IPAddress ip = IPAddress.Parse("127.0.0.1");
+        public IPAddress ip ;
 
-        public int port = 8885;
+        public int port;
 
         public string receiveStr = "";
 
@@ -29,6 +29,8 @@ namespace PlaneBombGame
             if (clientOrServer)
             {
                 clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                ip = newIp;
+                port = newPort;
             }
             else
             {
@@ -61,11 +63,14 @@ namespace PlaneBombGame
 
                 isConnected = true;
 
-                Thread receiveThread = new Thread(revFromClient);
-                receiveThread.Start();
+                if(clientSocket != null)
+                {
+                    Thread receiveThread = new Thread(revFromClient);
+                    receiveThread.Start();
 
-                Thread sendThred = new Thread(sendToClient);
-                sendThred.Start();
+                    Thread sendThred = new Thread(sendToClient);
+                    sendThred.Start();
+                }
             }
         }
 
@@ -113,7 +118,6 @@ namespace PlaneBombGame
             }
         }
 
-
         public void connectToServer()
         {
             try
@@ -122,7 +126,6 @@ namespace PlaneBombGame
                 isConnected = true;
                 Thread revServerThread = new Thread(revFromServer);
                 revServerThread.Start();
-
                 Thread sendServerThread = new Thread(sendToServer);
                 sendServerThread.Start();
             }
@@ -131,7 +134,6 @@ namespace PlaneBombGame
                 Thread TryToConnect = new Thread(tryToConnectToServer);
                 TryToConnect.Start();
             }
-
         }
 
         private void tryToConnectToServer()
@@ -167,7 +169,6 @@ namespace PlaneBombGame
                     byte[] result = new byte[1024];
                     int receiveLength = clientSocket.Receive(result);
                     receiveStr = Encoding.ASCII.GetString(result, 0, receiveLength);
-
                 }
                 catch (Exception ex)
                 {

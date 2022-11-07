@@ -1,24 +1,39 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Windows.Forms;
-using static System.Windows.Forms.AxHost;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace PlaneBombGame
 {
-    internal class VirtualModeState : State
+    internal class AIModeState : State
     {
+        private AiVirtualPlayer AiPlayer_1;
 
-        private int leftCount; // 已经放置的飞机数
+        private AiVirtualPlayer AiPlayer_2;
 
-        private LocalPlayer localPlayer;
 
-        private Player adversaryPlayer;
-
-        public void AddLeftCount()
+        public void setFirstAiPlayer(AiVirtualPlayer player)
         {
-            throw new NotImplementedException();
+            AiPlayer_1 = player;
+            player.Init();
+        }
+
+        public void setSecondAiPlayer(AiVirtualPlayer player)
+        {
+            AiPlayer_2 = player;
+            player.Init();
+        }
+
+        public AiVirtualPlayer getFirstAiPlayer()
+        {
+            return AiPlayer_1;
+        }
+
+        public AiVirtualPlayer getSecondAiPlayer()
+        {
+            return AiPlayer_2;
         }
 
         public string DrawLastPoint(AttackPoint a, Player adversaryPlayer, Graphics g)
@@ -41,24 +56,35 @@ namespace PlaneBombGame
 
         public void DrawPlane(Graphics g)
         {
-            Plane[] planes = localPlayer.GetPlanes();
-            foreach(Plane plane in planes)
-            {
-                if(plane != null)   
-                    plane.Draw(g);
-            }
+            throw new NotImplementedException();
         }
 
         public void DrawPlane(Graphics g, bool threeOrFour)
         {
-            throw new NotImplementedException();
+            if (threeOrFour)
+            {
+                Plane[] planes = AiPlayer_1.GetPlanes();
+                foreach (Plane plane in planes)
+                {
+                    if (plane != null)
+                        plane.Draw(g);
+                }
+            }
+            else
+            {
+                Plane[] planes = AiPlayer_2.GetPlanes();
+                foreach (Plane plane in planes)
+                {
+                    if (plane != null)
+                        plane.Draw(g);
+                }
+            }
         }
 
-        //第一个参数为攻击方  第二个参数为受击方 绘制第一个对第二个的伤害点
         public void DrawPoint(Player player, Player adversaryPlayer, Graphics g)
         {
             //遍历自身攻击过的点
-            foreach(AttackPoint a in player.GetAttackHistory())
+            foreach (AttackPoint a in player.GetAttackHistory())
             {
                 //判断攻击点对对手的伤害
                 string attackRes = Judger.JudgeAttack(adversaryPlayer, a);
@@ -79,61 +105,39 @@ namespace PlaneBombGame
 
         public Player GetAdversaryPlayer()
         {
-            return adversaryPlayer;
-        }
-
-        public AiVirtualPlayer getFirstAiPlayer()
-        {
             throw new NotImplementedException();
         }
 
         public int GetLeftCount()
         {
-            return leftCount;
+            throw new NotImplementedException();
         }
 
         public LocalPlayer GetLocalPlayer()
-        {
-            return localPlayer;
-        }
-
-        public AiVirtualPlayer getSecondAiPlayer()
         {
             throw new NotImplementedException();
         }
 
         public void Init()
         {
-            SetLeftCount(0);
-            //state.SetAdversaryPlayer(new RandomVirtualPlayer()); //随机
-            SetAdversaryPlayer(new AiVirtualPlayer()); //AI
-            SetLocalPlayer(new LocalPlayer());
+            throw new NotImplementedException();
         }
 
         public void SetAdversaryPlayer(Player player)
-        {
-            adversaryPlayer = player;
-            player.Init();
-        }
-
-        public void setFirstAiPlayer(AiVirtualPlayer player)
         {
             throw new NotImplementedException();
         }
 
         public void SetLeftCount(int leftCount)
         {
-            this.leftCount = leftCount;
+            throw new NotImplementedException();
         }
 
         public void SetLocalPlayer(LocalPlayer player)
         {
-            this.localPlayer = player;
-        }
-
-        public void setSecondAiPlayer(AiVirtualPlayer player)
-        {
             throw new NotImplementedException();
         }
+
+
     }
 }

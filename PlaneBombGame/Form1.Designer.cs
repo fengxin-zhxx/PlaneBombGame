@@ -58,7 +58,6 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1484, 60);
             this.panel2.TabIndex = 0;
-            // 
             // label4
             // 
             this.label4.Font = new System.Drawing.Font("宋体", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -68,6 +67,7 @@
             this.label4.TabIndex = 5;
             this.label4.Text = "请选择想要进行的模式";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
             // label1
             // 
@@ -183,6 +183,7 @@
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.LocationChanged += new System.EventHandler(this.Form1_LocationChanged);
             this.panel2.ResumeLayout(false);

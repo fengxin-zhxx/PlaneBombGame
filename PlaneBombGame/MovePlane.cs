@@ -49,17 +49,16 @@ namespace PlaneBombGame
 
         }
 
-
         private void movePlane_Paint(object sender, PaintEventArgs e)
         {            
             Graphics g = Graphics.FromImage(bitmap);
             g.Clear(this.BackColor);           
-            if (state != null)
+            if (state != null && state.GetLocalPlayer().GetPreviewPlane() != null)
             {
-                if (lastX != -1)
-                {
+                //if (lastX != -1)
+                //{
                     state.GetLocalPlayer().GetPreviewPlane().Draw(g, true);
-                }
+                //}
             }
             this.CreateGraphics().DrawImage(bitmap, 0, 0);
         }
@@ -76,12 +75,20 @@ namespace PlaneBombGame
                 return;
             }
 
-            if(state is HumanModeState && form1.isConnected == false)
+            if (state is HumanModeState)
             {
-                MessageBox.Show("请等待云端接入后再放置您的飞机", "提示");
-                return;
+                if(form1.isConnected == false)
+                {
+                    MessageBox.Show("请等待云端接入！", "提示");
+                    return;
+                }
+                if(form1.isEnemyReadyForGame == false)
+                {
+                    MessageBox.Show("请等待对手做好新游戏准备！", "提示");
+                    return;
+                }
+                
             }
-
 
             int PlacementX = (e.X - StandardSize.toLeft) / StandardSize.BlockWidth;      // 求鼠标点击的X方向的第几个点位
             int PlacementY = (e.Y - StandardSize.toTop)  / StandardSize.BlockWidth;      // 求鼠标点击的Y方向的第几个点位
@@ -106,6 +113,9 @@ namespace PlaneBombGame
                 {
                     if (state is HumanModeState)
                     {
+
+                        
+
                         //飞机放置完毕后发送至server端
                         string planesStr = "0 ";
 
@@ -121,6 +131,13 @@ namespace PlaneBombGame
                         }
 
                         form1.socket.sendStr = planesStr;
+
+                        /*if (form1.isConnected == false)
+                        {
+                            MessageBox.Show("请等待对手放置完Ta的飞机", "提示");
+                            this.Close();
+                            return;
+                        }*/
 
                         if (form1.isEnemySetAllPlanes == false)
                         {
@@ -140,6 +157,7 @@ namespace PlaneBombGame
                     }
                     MessageBox.Show("按确认开始对战", "提示");
                     form1.changeLable1Msg("点击右侧方格以攻击对手");
+                    form1.changeLable4Msg("开始进攻 ! ");
                     this.Close();
                 }
             }
@@ -154,7 +172,8 @@ namespace PlaneBombGame
             {
                 this.WindowState = FormWindowState.Minimized;
             }
-            if (!Judger.JudgeLegalMouseDown(e.X, e.Y)) return;
+            
+            //if (!Judger.JudgeLegalMouseDown(e.X, e.Y)) return;
 
             int PlacementX = (e.X - StandardSize.toLeft) / StandardSize.BlockWidth;      // 求鼠标点击的X方向的第几个点位
             int PlacementY = (e.Y - StandardSize.toTop) / StandardSize.BlockWidth;      // 求鼠标点击的Y方向的第几个点位
@@ -168,6 +187,7 @@ namespace PlaneBombGame
             lastY = PlacementY;
             
             state.GetLocalPlayer().UpdatePreviewPlane(PlacementX, PlacementY, nowDir);
+
             try
             {
                 if (!Judger.JudgeLegalPlanePlacement(state.GetLocalPlayer().GetPlanes(), state.GetLocalPlayer().GetPreviewPlane()))

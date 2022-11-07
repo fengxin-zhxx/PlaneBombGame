@@ -29,5 +29,13 @@ namespace PlaneBombGame
         // 绘画LocalPlayer放置的飞机
 
         void Init();
+
+        void setFirstAiPlayer(AiVirtualPlayer player);
+        void setSecondAiPlayer(AiVirtualPlayer player);
+
+        AiVirtualPlayer getFirstAiPlayer();
+        AiVirtualPlayer getSecondAiPlayer();
+        
+        void DrawPlane(Graphics g,bool threeOrFour);
     }
 }

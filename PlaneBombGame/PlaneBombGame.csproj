@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AIModeState.cs" />
     <Compile Include="AttackPoint.cs" />
     <Compile Include="BaseInfoSet.cs">
       <SubType>Form</SubType>

@@ -101,5 +101,30 @@ namespace PlaneBombGame
         {
             throw new NotImplementedException();
         }
+
+        public void setFirstAiPlayer(AiVirtualPlayer player)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void setSecondAiPlayer(AiVirtualPlayer player)
+        {
+            throw new NotImplementedException();
+        }
+
+        public AiVirtualPlayer getFirstAiPlayer()
+        {
+            throw new NotImplementedException();
+        }
+
+        public AiVirtualPlayer getSecondAiPlayer()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DrawPlane(Graphics g, bool threeOrFour)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -15,6 +15,7 @@ namespace PlaneBombGame
         public string ipStr;
         public string portStr;
         public bool clientOrServer = false;
+        private Form1 form1;
 
         public BaseInfoSet()
         {
@@ -24,6 +25,13 @@ namespace PlaneBombGame
             checkedListBox1.Items.Add("Client");
             checkedListBox1.Items.Add("Server");
             checkedListBox1.CheckOnClick = true;
+
+            form1 = Form1.getForm1();
+        }
+
+        public void changeBaseInfoSet()
+        {
+            this.Location = new Point(form1.Location.X +50 , form1.Location.Y + 60 + 60);
         }
 
         private void label1_Click(object sender, EventArgs e)
