@@ -29,7 +29,6 @@ namespace PlaneBombGame
         private Bitmap bitmap = new Bitmap(StandardSize.BoardWidth, StandardSize.BoardHeight);
 
         private System.Timers.Timer tmr = new System.Timers.Timer();
-
         public MovePlane()
         {
             InitializeComponent();

@@ -94,6 +94,7 @@ namespace PlaneBombGame
 
         private void BeginNewVirtualModeGame()
         {
+            aNewGameStart = false;
             state = new VirtualModeState();
             nowDir = 0;
             this.label1.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -306,6 +307,8 @@ namespace PlaneBombGame
                         label4.Text = "请等待对方落子...";
                         if (Judger.JudgePlayerWin(state.GetLocalPlayer(), state.GetAdversaryPlayer()))
                         {
+                            state.DrawPlane(panel4.CreateGraphics(), false);
+                            state.DrawPoint(state.GetLocalPlayer(), state.GetAdversaryPlayer(), panel4.CreateGraphics());
                             MessageBox.Show("You Won The Game!!");
                             label4.Text = "点击此处重新开始游戏 ...";
                             aNewGameStart = true;
@@ -329,6 +332,8 @@ namespace PlaneBombGame
                         player.AddAttackPoint(a, res);
                         if (Judger.JudgePlayerWin(state.GetAdversaryPlayer(),state.GetLocalPlayer()))
                         {
+                            state.DrawPlane(panel4.CreateGraphics(), false);
+                            state.DrawPoint(state.GetLocalPlayer(), state.GetAdversaryPlayer(), panel4.CreateGraphics());
                             MessageBox.Show("AI Won The Game!");
                             BeginNewVirtualModeGame();
                             return;
@@ -457,7 +462,8 @@ namespace PlaneBombGame
                             //判断胜负
                             if (Judger.JudgePlayerWin(state.GetAdversaryPlayer(), state.GetLocalPlayer()))
                             {
-                                state.DrawLastPoint(attackPoint, state.GetLocalPlayer(), panel3.CreateGraphics());
+                                state.DrawPlane(panel4.CreateGraphics(), false);
+                                state.DrawPoint(state.GetLocalPlayer(), state.GetAdversaryPlayer(), panel4.CreateGraphics());
                                 MessageBox.Show("AdversaryPlayer Won The Game!");
                                 if (label4.InvokeRequired)
                                 {

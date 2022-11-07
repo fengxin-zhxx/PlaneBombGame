@@ -51,7 +51,25 @@ namespace PlaneBombGame
 
         public void DrawPlane(Graphics g, bool threeOrFour)
         {
-            throw new NotImplementedException();
+            if (threeOrFour)
+            {
+                Plane[] planes = localPlayer.GetPlanes();
+                foreach (Plane plane in planes)
+                {
+                    if (plane != null)
+                        plane.Draw(g);
+                }
+            }
+            else
+            {
+                Plane[] planes = adversaryPlayer.GetPlanes();
+                foreach (Plane plane in planes)
+                {
+                    if (plane != null)
+                        plane.Draw(g);
+                }
+            }
+            
         }
 
         //第一个参数为攻击方  第二个参数为受击方 绘制第一个对第二个的伤害点
