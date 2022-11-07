@@ -125,7 +125,25 @@ namespace PlaneBombGame
 
         public void DrawPlane(Graphics g, bool threeOrFour)
         {
-            throw new NotImplementedException();
+            if (threeOrFour)
+            {
+                Plane[] planes = localPlayer.GetPlanes();
+                foreach (Plane plane in planes)
+                {
+                    if (plane != null)
+                        plane.Draw(g);
+                }
+            }
+            else
+            {
+                Plane[] planes = adversaryPlayer.GetPlanes();
+                foreach (Plane plane in planes)
+                {
+                    if (plane != null)
+                        plane.Draw(g);
+                }
+            }
+
         }
     }
 }

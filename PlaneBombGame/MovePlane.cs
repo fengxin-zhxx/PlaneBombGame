@@ -63,7 +63,6 @@ namespace PlaneBombGame
         public void reSetLocation(int x, int y)
         {
             this.Location = new Point(x, y + 60);
-
         }
 
         private void movePlane_Paint(object sender, PaintEventArgs e)

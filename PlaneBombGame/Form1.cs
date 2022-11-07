@@ -47,7 +47,7 @@ namespace PlaneBombGame
 
         private bool adverReadyForNewGame = false;
 
-        public  bool aNewGameStart = false;
+        public  Boolean aNewGameStart = false;
 
         public bool isEnemyReadyForGame = false;
 
@@ -94,7 +94,6 @@ namespace PlaneBombGame
 
         private void BeginNewVirtualModeGame()
         {
-            aNewGameStart = false;
             state = new VirtualModeState();
             nowDir = 0;
             this.label1.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -109,13 +108,13 @@ namespace PlaneBombGame
             state.SetLocalPlayer(new LocalPlayer());
             paintLoaclPlane();
             label4.Text = "正在进行人机对战...";
-
         }
 
         private void BeginNewHumanModeGame()
         {
             isEnemySetAllPlanes = false;
-            aNewGameStart = false;
+
+            aNewGameStart = false;            
 
 /*            if (clientOrServer)
             {
@@ -188,7 +187,6 @@ namespace PlaneBombGame
             
             }
         }
-
         
         //绘制左侧棋盘
         private void panel3_Paint(object sender, PaintEventArgs e)
@@ -236,7 +234,6 @@ namespace PlaneBombGame
             }
             panel4.CreateGraphics().DrawImage(bitmap, 0, 0);
         }
-
 
         //右侧棋盘 点击绘制落点并显示颜色
         private void panel4_MouseDown(object sender, MouseEventArgs e)
@@ -352,6 +349,8 @@ namespace PlaneBombGame
         {
             while (true && !aNewGameStart)
             {
+                Console.WriteLine(aNewGameStart);
+
                 if(socket.isConnected == false && isConnected == false)
                 {
                     if (label4.InvokeRequired)
@@ -457,8 +456,7 @@ namespace PlaneBombGame
                             int enemyChessDownCount = int.Parse(words[3]);
                             AttackPoint attackPoint = new AttackPoint(chessDownX, chessDownY);
                             //加入对手落子历史
-                            state.GetAdversaryPlayer().AddAttackPoint(attackPoint);
-                           
+                            state.GetAdversaryPlayer().AddAttackPoint(attackPoint);                           
                             //判断胜负
                             if (Judger.JudgePlayerWin(state.GetAdversaryPlayer(), state.GetLocalPlayer()))
                             {
