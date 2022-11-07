@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,8 @@ namespace PlaneBombGame
         Plane[] planes { get; set; }
 
         Plane previewPlane;
+        bool preViewPlaneIsValidPlace;
+        bool flashLight = false;
 
         ArrayList attackHistory = new ArrayList();
         public ArrayList GetAttackHistory()
@@ -28,7 +31,7 @@ namespace PlaneBombGame
         {
             return previewPlane;
         }
-        public void UpdatePreviewPlane(int x,int y,int dir)
+        public void UpdatePreviewPlane(int x,int y,int dir,bool isValidPlace)
         {
             if(previewPlane == null)
             {
@@ -40,6 +43,11 @@ namespace PlaneBombGame
                 previewPlane.y = y;
                 previewPlane.direction = dir;
             }
+            preViewPlaneIsValidPlace = isValidPlace;
+        }
+        public void UpdatePreviewPlane()
+        {
+            flashLight = flashLight ^ true;
         }
         public Plane[] GetPlanes()
         {
@@ -75,6 +83,11 @@ namespace PlaneBombGame
         public void Init()
         {
             throw new NotImplementedException();
+        }
+
+        internal void DrawPreviewPlane(Graphics g)
+        {
+            previewPlane.Draw(g, true, preViewPlaneIsValidPlace, flashLight);
         }
     }
 }

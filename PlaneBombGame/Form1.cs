@@ -68,7 +68,16 @@ namespace PlaneBombGame
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
         }
-
+        private void initialize()
+        {
+            start = false;
+            label1.Text = "WelCome To Plane Bombbbb!!!";
+            panel3.Width = StandardSize.BoardWidth;
+            panel3.Height = StandardSize.BoardHeight;
+            panel4.Width = StandardSize.BoardWidth;
+            panel4.Height = StandardSize.BoardHeight;
+            // TO DO
+        }
         private void Form1_Load(object sender, EventArgs e)
         {
             initialize();
@@ -179,17 +188,7 @@ namespace PlaneBombGame
             }
         }
 
-        private void initialize()
-        {
-            start = false;
-            label1.Text = "WelCome To Plane Bombbbb!!!";
-            panel3.Width = StandardSize.BoardWidth;
-            panel3.Height = StandardSize.BoardHeight;
-            panel4.Width = StandardSize.BoardWidth;
-            panel4.Height = StandardSize.BoardHeight;
-            // TO DO
-        }
-
+        
         //绘制左侧棋盘
         private void panel3_Paint(object sender, PaintEventArgs e)
         {
@@ -236,6 +235,7 @@ namespace PlaneBombGame
             }
             panel4.CreateGraphics().DrawImage(bitmap, 0, 0);
         }
+
 
         //右侧棋盘 点击绘制落点并显示颜色
         private void panel4_MouseDown(object sender, MouseEventArgs e)

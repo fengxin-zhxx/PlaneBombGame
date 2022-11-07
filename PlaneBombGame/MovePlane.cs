@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -21,13 +22,13 @@ namespace PlaneBombGame
         private int lastY = -1;
         private int nowDir = 0;
 
-        private int countSet = 0;
-
         private State state;
 
         private Form1 form1;
 
         private Bitmap bitmap = new Bitmap(StandardSize.BoardWidth, StandardSize.BoardHeight);
+
+        private System.Timers.Timer tmr = new System.Timers.Timer();
 
         public MovePlane()
         {
@@ -35,9 +36,26 @@ namespace PlaneBombGame
             form1 = Form1.getForm1();
             state = form1.state;            
         }
-
+        private void flash(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            lock (state)
+            {
+                if (state != null && state.GetLocalPlayer().GetPreviewPlane() != null)
+                {
+                    state.GetLocalPlayer().UpdatePreviewPlane();
+                }
+                this.Invalidate();
+            }
+            
+        }
         private void MovePlane_Load(object sender, EventArgs e)
         {
+            tmr.Elapsed += new System.Timers.ElapsedEventHandler(flash);
+            tmr.Interval = 150;
+            tmr.AutoReset = true; //true-一直循环 ，false-循环一次   
+
+            tmr.Enabled = false;
+
             this.FormBorderStyle = FormBorderStyle.None;
             this.Location = new Point(form1.Location.X + 8, form1.Location.Y + 30 + 60);
             this.ShowInTaskbar = false;
@@ -52,15 +70,15 @@ namespace PlaneBombGame
         private void movePlane_Paint(object sender, PaintEventArgs e)
         {            
             Graphics g = Graphics.FromImage(bitmap);
-            g.Clear(this.BackColor);           
-            if (state != null && state.GetLocalPlayer().GetPreviewPlane() != null)
+            g.Clear(this.BackColor);
+            lock (state)
             {
-                //if (lastX != -1)
-                //{
-                    state.GetLocalPlayer().GetPreviewPlane().Draw(g, true);
-                //}
+                if (state != null && state.GetLocalPlayer().GetPreviewPlane() != null)
+                {
+                    state.GetLocalPlayer().DrawPreviewPlane(g);
+                }
+                this.CreateGraphics().DrawImage(bitmap, 0, 0);
             }
-            this.CreateGraphics().DrawImage(bitmap, 0, 0);
         }
 
 
@@ -172,34 +190,32 @@ namespace PlaneBombGame
             {
                 this.WindowState = FormWindowState.Minimized;
             }
-            
-            //if (!Judger.JudgeLegalMouseDown(e.X, e.Y)) return;
 
-            int PlacementX = (e.X - StandardSize.toLeft) / StandardSize.BlockWidth;      // 求鼠标点击的X方向的第几个点位
-            int PlacementY = (e.Y - StandardSize.toTop) / StandardSize.BlockWidth;      // 求鼠标点击的Y方向的第几个点位
-            
-            if (PlacementX == lastX && PlacementY == lastY)
-            {
-                return;
-            }            
-            
+            int PlacementX = (e.X - StandardSize.toLeft) / StandardSize.BlockWidth;
+            int PlacementY = (e.Y - StandardSize.toTop) / StandardSize.BlockWidth;
+
+            if (PlacementX == lastX && PlacementY == lastY) return;
+
+            //缓存本次的移动位置
             lastX = PlacementX;
             lastY = PlacementY;
-            
-            state.GetLocalPlayer().UpdatePreviewPlane(PlacementX, PlacementY, nowDir);
 
-            try
+            Console.WriteLine(lastX + " " + lastY);
+
+            bool isValidPlace = true;
+            //判断是否超出棋盘,是否与放置的飞机重叠
+            lock (state)
             {
-                if (!Judger.JudgeLegalPlanePlacement(state.GetLocalPlayer().GetPlanes(), state.GetLocalPlayer().GetPreviewPlane()))
+                if (!Judger.JudgeLegalPlanePlacement(state.GetLocalPlayer().GetPlanes(), new Plane(PlacementX, PlacementY, nowDir)))
                 {
-                    lastX = -1;
-                    lastY = -1;
+                    isValidPlace = false;
+                    tmr.Enabled = true;
                 }
-                this.Invalidate();
-            }
-            catch (Exception)
-            {
+                else tmr.Enabled = false;
 
+                //更新当前预览飞机的信息
+                state.GetLocalPlayer().UpdatePreviewPlane(PlacementX, PlacementY, nowDir, isValidPlace);
+                this.Invalidate();
             }
         }
     }

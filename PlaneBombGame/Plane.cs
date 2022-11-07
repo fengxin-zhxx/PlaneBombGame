@@ -38,7 +38,6 @@ namespace PlaneBombGame
 
         public int x {get; set;}
         public int y {get; set;}
-
         public int direction { get; set; }
         public Plane(int x, int y,int direction)
         {
@@ -48,7 +47,11 @@ namespace PlaneBombGame
         }
 
         //加入飞机方向判断
-        public void Draw(Graphics g, bool isPreviewPlane = false) {
+        public void Draw(Graphics g, bool isPreviewPlane = false, bool isValidPlace = false, bool flashLight = false) {
+
+            if (isPreviewPlane && !isValidPlace && !flashLight) return;
+
+            //Console.WriteLine(isPreviewPlane.ToString() + isValidPlace.ToString());
 
             g.SmoothingMode = SmoothingMode.HighQuality;
             g.InterpolationMode = InterpolationMode.HighQualityBicubic;
@@ -80,14 +83,14 @@ namespace PlaneBombGame
             recs[11] = new Rectangle(AccurateX, AccurateY, dx, 3 * dy);
 
 
-            //direction = 3;
-            /*Pen pen = new Pen(Color.Black);
-            for (int i = 0; i < 3; i++) {
-                g.DrawRectangle(pen, recs[direction * 3 + i]);
-            }*/
             SolidBrush brush;
-            if (!isPreviewPlane) brush = new SolidBrush(Color.Thistle);
-            else brush = new SolidBrush(Color.Pink);
+            if (!isPreviewPlane) brush = new SolidBrush(Color.LightBlue);
+            else if (isValidPlace) brush = new SolidBrush(Color.LightGreen);
+            else brush = new SolidBrush(Color.Gold);
+            
+
+
+
             for (int i = 0; i < 3; i++) {
                 g.FillRectangle(brush, recs[direction * 3 + i]);
             }
@@ -130,13 +133,6 @@ namespace PlaneBombGame
                 g.FillEllipse(brush, rc[5 * direction + i]);
             }
 
-            //Bitmap bt = new Bitmap("D:\\桌面\\大学\\大三上\\C#\\蓝色飞机.png");
-            //TextureBrush tb = new TextureBrush(bt);
-            //for(int i = 0; i < 3; i++) {
-            //    g.FillRectangle(tb, recs[direction * 3 + i]);
-            //}
-
-            //g.FillEllipse(new SolidBrush(Color.Blue), AccurateX, AccurateY, StandardSize.BlockWidth, StandardSize.BlockWidth);
         }
         public override string ToString()
         {
