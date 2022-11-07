@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 using System.Net.Sockets;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
 
 namespace PlaneBombGame
 {
@@ -124,6 +125,7 @@ namespace PlaneBombGame
             state.SetLocalPlayer(new LocalPlayer());
 
             Thread TransMessageThread = new Thread(transMessage);
+            TransMessageThread.IsBackground = true;
             TransMessageThread.Start();
 
             lastX = lastY = -1;
@@ -519,6 +521,7 @@ namespace PlaneBombGame
             state.DrawPlane(panel3.CreateGraphics(),true);            
             state.DrawPlane(panel4.CreateGraphics(),false);
             Thread AiModePlayBeiginThread = new Thread(AiModePlayerBegin);
+            AiModePlayBeiginThread.IsBackground = true;
             AiModePlayBeiginThread.Start();
         }
 
@@ -623,7 +626,7 @@ namespace PlaneBombGame
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            System.Environment.Exit(0);
+           // System.Environment.Exit(0);
         }
 
         private void label4_Click(object sender, EventArgs e)

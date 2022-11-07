@@ -52,6 +52,7 @@ namespace PlaneBombGame
         public void ListenClientConnect()
         {
             Thread goListenThread = new Thread(keepListening);
+            goListenThread.IsBackground = true; 
             goListenThread.Start();
         }
 
@@ -60,15 +61,14 @@ namespace PlaneBombGame
             while (true)
             {
                 clientSocket = serverSocket.Accept();
-
                 isConnected = true;
-
                 if(clientSocket != null)
                 {
                     Thread receiveThread = new Thread(revFromClient);
+                    receiveThread.IsBackground = true;
                     receiveThread.Start();
-
                     Thread sendThred = new Thread(sendToClient);
+                    sendThred.IsBackground = true;  
                     sendThred.Start();
                 }
             }
@@ -125,13 +125,16 @@ namespace PlaneBombGame
                 clientSocket.Connect(new IPEndPoint(ip, 8885));
                 isConnected = true;
                 Thread revServerThread = new Thread(revFromServer);
+                revServerThread.IsBackground = true;
                 revServerThread.Start();
                 Thread sendServerThread = new Thread(sendToServer);
+                sendServerThread.IsBackground = true;
                 sendServerThread.Start();
             }
             catch
             {
                 Thread TryToConnect = new Thread(tryToConnectToServer);
+                TryToConnect.IsBackground = true;
                 TryToConnect.Start();
             }
         }
@@ -148,9 +151,11 @@ namespace PlaneBombGame
                     tryToConnect = false;
 
                     Thread revServerThread = new Thread(revFromServer);
+                    revServerThread.IsBackground = true;
                     revServerThread.Start();
 
                     Thread sendServerThread = new Thread(sendToServer);
+                    sendServerThread.IsBackground = true;
                     sendServerThread.Start();
                 }
                 catch
