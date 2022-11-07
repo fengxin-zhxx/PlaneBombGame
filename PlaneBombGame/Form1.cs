@@ -349,8 +349,6 @@ namespace PlaneBombGame
         {
             while (true && !aNewGameStart)
             {
-                Console.WriteLine(aNewGameStart);
-
                 if(socket.isConnected == false && isConnected == false)
                 {
                     if (label4.InvokeRequired)
@@ -531,7 +529,6 @@ namespace PlaneBombGame
 
         private void AiModePlayerBegin()
         {
-            int stopNum = 0;
             while (true)
             {                 
                 //取一号机器人进攻点

@@ -198,7 +198,6 @@ namespace PlaneBombGame
             lastX = PlacementX;
             lastY = PlacementY;
 
-            Console.WriteLine(lastX + " " + lastY);
 
             bool isValidPlace = true;
             //判断是否超出棋盘,是否与放置的飞机重叠

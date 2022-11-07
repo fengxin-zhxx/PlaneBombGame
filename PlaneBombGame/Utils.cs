@@ -114,7 +114,7 @@ namespace PlaneBombGame
                     }
                 }
             }
-            Console.WriteLine(bx + " " + by + " " + Max);
+            //Console.WriteLine(bx + " " + by + " " + Max);
             return new int[] { bx, by };
         }
         public static AttackPoint GetPlaneHead(Plane plane)
