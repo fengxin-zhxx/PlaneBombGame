@@ -12,7 +12,7 @@ namespace PlaneBombGame.Image
         public static DialogResult Show(out string getNewIp,out string getNewPort,out bool clientOrSocket)
         {
             BaseInfoSet inputDialog = new BaseInfoSet();
-            inputDialog.changeBaseInfoSet();
+            //inputDialog.changeBaseInfoSet();
 
             DialogResult result = inputDialog.ShowDialog();            
             getNewIp = inputDialog.ipStr;

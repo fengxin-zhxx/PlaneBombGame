@@ -53,7 +53,7 @@ namespace PlaneBombGame
 
         private void BaseInfoSet_Load(object sender, EventArgs e)
         {
-
+            changeBaseInfoSet();
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)

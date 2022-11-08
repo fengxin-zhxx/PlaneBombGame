@@ -83,7 +83,7 @@ namespace PlaneBombGame
             initialize();
             this.Width = StandardSize.FormWidth;
             this.Height = StandardSize.FormHeight;
-            this.Location = new Point(100, 10);
+            this.Location = new Point(240, 10);
         }
 
         //人机对战  采用随机生成飞机  随即落点的方式
