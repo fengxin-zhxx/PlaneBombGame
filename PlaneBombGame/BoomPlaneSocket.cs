@@ -208,5 +208,11 @@ namespace PlaneBombGame
                 }
             }
         }
+
+        public void closeSocket()
+        {
+            clientSocket.Shutdown(SocketShutdown.Both);
+            clientSocket.Close();
+        }
     }
 }

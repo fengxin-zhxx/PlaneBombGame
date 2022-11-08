@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 using System.Net.Sockets;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
+using System.Reflection.Emit;
 
 namespace PlaneBombGame
 {
@@ -17,10 +18,7 @@ namespace PlaneBombGame
 
         public bool isEnemySetAllPlanes = false;
 
-        public int lastX = -1, lastY = -1;
-        
-
-
+        public int lastX = -1, lastY = -1;       
 
         public int nowDir;
 
@@ -51,6 +49,7 @@ namespace PlaneBombGame
 
         public bool isEnemyReadyForGame = false;
 
+        private bool clientOrServer;
 
         internal static Form1 getForm1()
         {
@@ -88,8 +87,86 @@ namespace PlaneBombGame
 
         //人机对战  采用随机生成飞机  随即落点的方式
         private void button1_Click(object sender, EventArgs e)
-        {
+        { 
             BeginNewVirtualModeGame();
+            button2.Enabled = false;
+            button3.Enabled = false;
+        }
+        
+        //人人对战  初始化 socket  Client 端  并生成state
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if(socket != null)
+            {
+                reBeginNewHumanModeGame();
+                button2.Enabled = false;
+                button1.Enabled = false;
+                button3.Enabled = false;
+            }
+
+            string getNewIp = "";
+
+            string getNewPort = "";
+
+            clientOrServer = false;
+
+            SetInfoDialog.Show(out getNewIp, out getNewPort, out clientOrServer);
+            try
+            {
+                IPAddress ip = IPAddress.Parse(getNewIp);
+
+                int port = int.Parse(getNewPort);
+
+                if (clientOrServer)
+                {
+                    socket = BoomPlaneSocket.getSocket(clientOrServer, ip, port);
+                    socket.connectToServer();
+                    whoseTurn = false;
+                }
+                else
+                {
+                    socket = BoomPlaneSocket.getSocket(clientOrServer, ip, port);
+                    socket.ListenClientConnect();
+                    whoseTurn = true;
+                }
+
+                this.label1.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+                label1.Text = label1Text + directions[nowDir];
+                
+                BeginNewHumanModeGame();
+                
+                button2.Enabled = false;
+                button1.Enabled = false;
+                button3.Enabled = false;
+            }
+            catch (ArgumentNullException)
+            {
+
+
+            }
+        }
+
+        //自动对战
+        private void button3_Click(object sender, EventArgs e)
+        {
+            state = new AIModeState();
+            this.label1.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            label1.Text = "比赛进行中...";
+            label4.Text = "AI自动对战";
+
+            panel1.Invalidate();
+            panel3.Invalidate();
+            panel4.Invalidate();
+
+            start = true;
+            state.setFirstAiPlayer(new AiVirtualPlayer());
+            state.setSecondAiPlayer(new AiVirtualPlayer());
+
+            AiModePlayerInit();
+
+            button2.Enabled = false;
+            button1.Enabled = false;
+            button3.Enabled = false;
         }
 
         private void BeginNewVirtualModeGame()
@@ -116,14 +193,14 @@ namespace PlaneBombGame
 
             aNewGameStart = false;            
 
-/*            if (clientOrServer)
+            if (clientOrServer)
             {
                 whoseTurn = false;
             }
             else
             {
                 whoseTurn = true;
-            }*/
+            }
 
             state = new HumanModeState();
             nowDir = 0;
@@ -145,49 +222,13 @@ namespace PlaneBombGame
             paintLoaclPlane();                                                         
         }
 
-        //人人对战  初始化 socket  Client 端  并生成state
-        private void button2_Click(object sender, EventArgs e)
+        private void reBeginNewHumanModeGame()
         {
-            string getNewIp = "";
-
-            string getNewPort = "";
-
-            bool clientOrServer = false;
-
-            SetInfoDialog.Show(out getNewIp, out getNewPort, out clientOrServer);
-            try
-            {
-                IPAddress ip = IPAddress.Parse(getNewIp);
-
-                int port = int.Parse(getNewPort);
-
-                if (clientOrServer)
-                {
-                    socket = BoomPlaneSocket.getSocket(clientOrServer, ip, port);
-                    socket.connectToServer();
-                    whoseTurn = false;
-                }
-                else
-                {
-                    socket = BoomPlaneSocket.getSocket(clientOrServer, ip, port);
-                    socket.ListenClientConnect();
-                    whoseTurn = true;
-                }
-
-                this.label1.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-                label1.Text = label1Text + directions[nowDir];
-
-                BeginNewHumanModeGame();
-
-                button2.Enabled = false;
-            }
-            catch (ArgumentNullException)
-            {
-
-            
-            }
+            BeginNewHumanModeGame();
+            this.label1.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            label1.Text = label1Text + directions[nowDir];
         }
-        
+
         //绘制左侧棋盘
         private void panel3_Paint(object sender, PaintEventArgs e)
         {
@@ -307,8 +348,10 @@ namespace PlaneBombGame
                             state.DrawPlane(panel4.CreateGraphics(), false);
                             state.DrawPoint(state.GetLocalPlayer(), state.GetAdversaryPlayer(), panel4.CreateGraphics());
                             MessageBox.Show("You Won The Game!!");
-                            label4.Text = "点击此处重新开始游戏 ...";
                             aNewGameStart = true;
+                            label4.Text = "点击此处重新开始游戏...";                            
+                            button1.Enabled = true;
+                            button3.Enabled = true;
                             return;
                         }
                         whoseTurn = false;
@@ -320,7 +363,10 @@ namespace PlaneBombGame
                             state.DrawPlane(panel4.CreateGraphics(), false);
                             state.DrawPoint(state.GetLocalPlayer(), state.GetAdversaryPlayer(), panel4.CreateGraphics());
                             MessageBox.Show("You Won The Game!!");
-                            BeginNewVirtualModeGame();                            
+                            label4.Text = "请选择想要进行的模式";
+                            //BeginNewVirtualModeGame();
+                            start = false;//重新开始游戏
+                            button3.Enabled = true;//允许进行AI自动对战                           
                             return;
                         }
                         Player player = state.GetAdversaryPlayer();
@@ -334,7 +380,10 @@ namespace PlaneBombGame
                             state.DrawPlane(panel4.CreateGraphics(), false);
                             state.DrawPoint(state.GetLocalPlayer(), state.GetAdversaryPlayer(), panel4.CreateGraphics());
                             MessageBox.Show("AI Won The Game!");
-                            BeginNewVirtualModeGame();
+                            label4.Text = "请选择想要进行的模式";
+                            //BeginNewVirtualModeGame();
+                            start = false;//重新开始游戏
+                            button3.Enabled = true;//允许进行AI自动对战
                             return;
                         }
                     }
@@ -349,6 +398,8 @@ namespace PlaneBombGame
 
         private void transMessage()
         {
+            bool keepSendingMsg = true;
+            int connectVar = 2;
             while (true && !aNewGameStart)
             {
                 if(socket.isConnected == false && isConnected == false)
@@ -401,16 +452,11 @@ namespace PlaneBombGame
                         }
                     }
                 }
-                if(socket.isConnected == true && isEnemyReadyForGame == false)
+                if(socket.isConnected == true && keepSendingMsg)
                 {
-                    socket.sendStr = "2";
-                  /* if (label1.InvokeRequired)
-                    {
-                        Action<string> actionDelegate = (x) => { this.label1.Text = x.ToString(); };
-                        this.label1.Invoke(actionDelegate, "connected");
-                    }*/
+                    //我没有接收到，发2                   
+                    socket.sendStr = connectVar.ToString();
                 }
-
                 //如果接收到的消息不为空
                 if (socket.receiveStr != "")
                 {
@@ -468,6 +514,16 @@ namespace PlaneBombGame
                                     Action<string> actionDelegate = (x) => { this.label4.Text = x.ToString(); };
                                     this.label4.Invoke(actionDelegate, "点击此处重新开始游戏 ...");
                                 }
+                                if (button3.InvokeRequired)
+                                {
+                                    Action<bool> actionDelegate = (x) => { this.button3.Enabled = x; };
+                                    this.button3.Invoke(actionDelegate, true);
+                                }
+                                if (button1.InvokeRequired)
+                                {
+                                    Action<bool> actionDelegate = (x) => { this.button1.Enabled = x; };
+                                    this.button1.Invoke(actionDelegate, true);
+                                }
                                 aNewGameStart = true;
                             }
                             else
@@ -486,35 +542,29 @@ namespace PlaneBombGame
                             }
                             break;
                         case 2:
-                            isEnemyReadyForGame = true;
-                            socket.sendStr = "";
+                            //我接受到了发3
+                            connectVar = 3;
                             break;
-                    }
+                        case 3:
+                            //我接到3就不再发了
+                            isEnemyReadyForGame = true;
+                            //保证对面会收到一个3
+                            if(keepSendingMsg == true)
+                            {
+                                for(int i = 0; i <= 100; i++)
+                                {
+                                    socket.sendStr = "3";
+                                    Thread.Sleep(1);
+                                }
+                            }
+                            keepSendingMsg = false;                            
+                            break;
+                    } 
                     //消息翻译完毕字符串清空
                     socket.receiveStr = "";
                 }
             }
         }
-
-        //自动对战
-        private void button3_Click(object sender, EventArgs e)
-        {
-            state = new AIModeState();
-            this.label1.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            label1.Text = "比赛进行中...";
-            label4.Text = "AI自动对战";                      
-            
-            panel1.Invalidate();
-            panel3.Invalidate();
-            panel4.Invalidate();
-
-            start = true;
-            state.setFirstAiPlayer(new AiVirtualPlayer());
-            state.setSecondAiPlayer(new AiVirtualPlayer());
-
-            AiModePlayerInit();
-        }
-
 
         private void AiModePlayerInit()
         {
@@ -554,7 +604,7 @@ namespace PlaneBombGame
                     break;
                 }               
 
-                Thread.Sleep(1000);
+                Thread.Sleep(300);
 
                 AttackPoint secondAttackPoint = state.getSecondAiPlayer().NextAttack();
                 
@@ -575,7 +625,17 @@ namespace PlaneBombGame
                     break;
                 }
 
-                Thread.Sleep(1000);
+                Thread.Sleep(300);
+            }
+            if (button3.InvokeRequired)
+            {
+                Action<bool> actionDelegate = (x) => { this.button3.Enabled = x; };
+                this.button3.Invoke(actionDelegate, true);
+            }
+            if (button1.InvokeRequired)
+            {
+                Action<bool> actionDelegate = (x) => { this.button1.Enabled = x; };
+                this.button1.Invoke(actionDelegate, true);
             }
         }
 
@@ -634,21 +694,17 @@ namespace PlaneBombGame
 
         private void label4_Click(object sender, EventArgs e)
         {
-            isEnemyReadyForGame = false;
-            reBeginNewHumanModeGame();            
+            if(state is HumanModeState && aNewGameStart)
+            {
+                isEnemyReadyForGame = false;
+                reBeginNewHumanModeGame();
+            }
         }
 
         public void setLocalPlane()
         {
             state.DrawPlane(panel3.CreateGraphics());
-        }  
+        }             
 
-        private void reBeginNewHumanModeGame()
-        {
-            BeginNewHumanModeGame();            
-            this.label1.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            label1.Text = label1Text + directions[nowDir];
-        }
-    
     }
 }

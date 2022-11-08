@@ -33,7 +33,7 @@ namespace PlaneBombGame
         {
             this.Location = new Point(form1.Location.X +50 , form1.Location.Y + 60 + 60);
         }
-
+         
         private void label1_Click(object sender, EventArgs e)
         {
 
