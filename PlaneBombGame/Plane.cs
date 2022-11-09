@@ -85,8 +85,8 @@ namespace PlaneBombGame
 
             SolidBrush brush;
             if (!isPreviewPlane) brush = new SolidBrush(Color.LightBlue);
-            else if (isValidPlace) brush = new SolidBrush(Color.LightGreen);
-            else brush = new SolidBrush(Color.Gold);
+            else if (isValidPlace) brush = new SolidBrush(Color.FromArgb(115,230,140));
+            else brush = new SolidBrush(Color.FromArgb(255, 134, 91));
             
 
 
