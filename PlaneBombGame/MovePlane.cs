@@ -29,6 +29,7 @@ namespace PlaneBombGame
         private Bitmap bitmap = new Bitmap(StandardSize.BoardWidth, StandardSize.BoardHeight);
 
         private System.Timers.Timer tmr = new System.Timers.Timer();
+        
         public MovePlane()
         {
             InitializeComponent();
@@ -128,10 +129,7 @@ namespace PlaneBombGame
                 if (state.GetLeftCount() == 3)
                 {
                     if (state is HumanModeState)
-                    {
-
-                        
-
+                    {                        
                         //飞机放置完毕后发送至server端
                         string planesStr = "0 ";
 
@@ -177,14 +175,12 @@ namespace PlaneBombGame
 
                     }
                     MessageBox.Show("按确认开始对战", "提示");
-                    form1.changeLable1Msg("点击右侧方格以攻击对手");
+                    form1.changeLable1Msg("点击右侧方格以攻击对手(点击此处显示提示)");
                     form1.changeLable4Msg("开始进攻 ! ");
                     this.Close();
                 }
             }
-            catch (Exception) { } // 防止崩溃
-           
-
+            catch (Exception) { } // 防止崩溃          
         }
 
         private void panel1_MouseMove(object sender, MouseEventArgs e)
@@ -202,7 +198,6 @@ namespace PlaneBombGame
             //缓存本次的移动位置
             lastX = PlacementX;
             lastY = PlacementY;
-
 
             bool isValidPlace = true;
             //判断是否超出棋盘,是否与放置的飞机重叠

@@ -19,9 +19,11 @@ namespace PlaneBombGame
         Plane[] planes;
 
         ArrayList attackHistory = new ArrayList();
+
         Random r = new Random(); // 以当前时间为随机数种子
 
-        ArrayList vectorStore = null;
+        internal ArrayList vectorStore{ get; set; }
+
         int[,] nowMap = new int[11, 11];
         int[,] nowCnt = new int[11, 11];
         int[,] nowHeadCnt = new int[11, 11];
@@ -72,11 +74,10 @@ namespace PlaneBombGame
         {
             //for (int i = 0; i < 3; i++) D[i] = -1;
             //DFS(1, 1);
-            vectorStore = Utils.GetAllLegalPlacement();
-            
+            vectorStore = Utils.GetAllLegalPlacement();            
         }
 
-        private void UpdateInfo()
+        public void UpdateInfo()
         {
             int cnt = attackHistory.Count;
             ArrayList ResVector = new ArrayList();
@@ -93,7 +94,6 @@ namespace PlaneBombGame
                     Utils.AddPlanesHeadsOnMap(nowHeadCnt, vectorPlanes);
                 }
             }
-
             vectorStore = ResVector;
         }
         public AttackPoint NextAttack()
@@ -188,5 +188,6 @@ namespace PlaneBombGame
             int adversaryNums = adversaryPlayer.GetAiAssistantPlayer().GetCurrentLegalCount();
             return 1.0 * adversaryNums / (adversaryNums + currentNums);
         }
+
     }
 }

@@ -31,7 +31,14 @@ namespace PlaneBombGame
             return null;
         }
 
-        
+        public Plane[] GetPredictPlanes()
+        {
+            return (Plane[])aiPlayer.vectorStore[new Random().Next(0, aiPlayer.vectorStore.Count)];
+        }        
 
+        public void upDateInfo()
+        {
+            aiPlayer.UpdateInfo();
+        }
     }
 }

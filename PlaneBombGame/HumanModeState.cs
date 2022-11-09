@@ -94,7 +94,6 @@ namespace PlaneBombGame
                     a.Draw(g, Color.Gray);
                     break;
             }
-            // TO DO
             return attackRes;
         }
 

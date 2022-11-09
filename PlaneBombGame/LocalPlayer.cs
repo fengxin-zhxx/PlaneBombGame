@@ -15,13 +15,15 @@ namespace PlaneBombGame
         Plane[] planes { get; set; }
 
         Plane previewPlane;
+
         bool preViewPlaneIsValidPlace;
+        
         bool flashLight = false;
 
         AiAssistant aiAssistant = new AiAssistant();
 
-
         ArrayList attackHistory = new ArrayList();
+
         public ArrayList GetAttackHistory()
         {
             return attackHistory;
@@ -77,6 +79,7 @@ namespace PlaneBombGame
         {
             attackHistory.Add(attackPoint); 
             aiAssistant.AddAttackPoint(attackPoint, res);//向AI助手传送
+            aiAssistant.upDateInfo();
         }
 
 

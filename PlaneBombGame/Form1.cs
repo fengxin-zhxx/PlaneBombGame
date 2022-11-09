@@ -9,6 +9,8 @@ using System.Runtime.CompilerServices;
 using System.Net.Sockets;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
 using System.Reflection.Emit;
+using System.Security.Policy;
+using System.Timers;
 
 namespace PlaneBombGame
 {
@@ -51,6 +53,10 @@ namespace PlaneBombGame
 
         private bool clientOrServer;
 
+        //private System.Timers.Timer showPredictTmr = new System.Timers.Timer();
+
+
+
         internal static Form1 getForm1()
         {
             if (form1 == null)
@@ -67,6 +73,7 @@ namespace PlaneBombGame
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
         }
+        
         private void initialize()
         {
             start = false;
@@ -77,12 +84,18 @@ namespace PlaneBombGame
             panel4.Height = StandardSize.BoardHeight;
             // TO DO
         }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             initialize();
             this.Width = StandardSize.FormWidth;
             this.Height = StandardSize.FormHeight;
             this.Location = new Point(240, 10);
+
+/*            showPredictTmr.Elapsed += new System.Timers.ElapsedEventHandler(showPredictPlane);
+            showPredictTmr.Enabled = false;
+            showPredictTmr.Interval = 150;*/
+
         }
 
         //人机对战  采用随机生成飞机  随即落点的方式
@@ -335,7 +348,6 @@ namespace PlaneBombGame
 
                     string localRes = state.DrawLastPoint(attackPoint, state.GetAdversaryPlayer(), panel4.CreateGraphics());
                     state.GetLocalPlayer().AddAttackPoint(attackPoint, localRes); // 新的攻击点加入历史记录
-
                     
                     if (state is HumanModeState)
                     {
@@ -391,6 +403,7 @@ namespace PlaneBombGame
                             //BeginNewVirtualModeGame();
                             start = false;//重新开始游戏
                             button3.Enabled = true;//允许进行AI自动对战
+                            state = null;
                             return;
                         }
                         AttackPoint atk = state.GetLocalPlayer().GetAiAssistantPlayer().NextAttack();
@@ -709,6 +722,32 @@ namespace PlaneBombGame
                 isEnemyReadyForGame = false;
                 reBeginNewHumanModeGame();
             }
+        }
+
+        private void label1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if(state != null)
+            {
+                Graphics g = Graphics.FromImage(bitmap);
+                Plane[] predictPlane = state.GetLocalPlayer().GetAiAssistant().GetPredictPlanes();
+                foreach(Plane plane in predictPlane)
+                {                    
+                    plane.Draw(g);
+                }
+                state.DrawPoint(state.GetLocalPlayer(), state.GetAdversaryPlayer(), g);
+                panel4.CreateGraphics().DrawImage(bitmap, 0, 0);
+                
+                AttackPoint atk = state.GetLocalPlayer().GetAiAssistantPlayer().NextAttack();
+                label4.Text = "AI建议落子 (" + atk.x + " , " + atk.y+ ")";
+            }
+        }
+
+        private void label1_MouseUp(object sender, MouseEventArgs e)
+        {
+            if(state != null)
+            {
+                panel4.Invalidate();
+            }            
         }
 
         public void setLocalPlane()
