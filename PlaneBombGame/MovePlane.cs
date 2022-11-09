@@ -10,8 +10,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
-
 using static System.Windows.Forms.AxHost;
 
 namespace PlaneBombGame
@@ -29,12 +29,12 @@ namespace PlaneBombGame
         private Bitmap bitmap = new Bitmap(StandardSize.BoardWidth, StandardSize.BoardHeight);
 
         private System.Timers.Timer tmr = new System.Timers.Timer();
-        
+
         public MovePlane()
         {
             InitializeComponent();
             form1 = Form1.getForm1();
-            state = form1.state;            
+            state = form1.state;
         }
         private void flash(object sender, System.Timers.ElapsedEventArgs e)
         {
@@ -46,7 +46,6 @@ namespace PlaneBombGame
                 }
                 this.Invalidate();
             }
-            
         }
         private void MovePlane_Load(object sender, EventArgs e)
         {
@@ -67,7 +66,12 @@ namespace PlaneBombGame
         }
 
         private void movePlane_Paint(object sender, PaintEventArgs e)
-        {            
+        {
+            //当form1不是活动窗口的时候，禁止显示闪动飞机
+            if (!form1.isForm1Active())
+            {
+                return;
+            }
             Graphics g = Graphics.FromImage(bitmap);
             g.Clear(this.BackColor);
             lock (state)
@@ -79,10 +83,16 @@ namespace PlaneBombGame
                 this.CreateGraphics().DrawImage(bitmap, 0, 0);
             }
         }
-
+        private void setForm1Active()
+        {
+            if (!form1.isForm1Active())
+            {
+                form1.Activate();
+            }
+        }
 
         private void form_MouseDown(object sender, MouseEventArgs e)
-        {            
+        {
             if (e.Button == MouseButtons.Right)
             {
                 nowDir = (nowDir + 1) % 4;
@@ -94,42 +104,46 @@ namespace PlaneBombGame
 
             if (state is HumanModeState)
             {
-                if(form1.isConnected == false)
+                if (form1.isConnected == false)
                 {
                     MessageBox.Show("请等待云端接入！", "提示");
+                    setForm1Active();
                     return;
                 }
-                if(form1.isEnemyReadyForGame == false)
+                if (form1.isEnemyReadyForGame == false)
                 {
                     MessageBox.Show("请等待对手做好新游戏准备！", "提示");
+                    setForm1Active();
                     return;
                 }
-                
+
             }
 
             int PlacementX = (e.X - StandardSize.toLeft) / StandardSize.BlockWidth;      // 求鼠标点击的X方向的第几个点位
-            int PlacementY = (e.Y - StandardSize.toTop)  / StandardSize.BlockWidth;      // 求鼠标点击的Y方向的第几个点位
-            
+            int PlacementY = (e.Y - StandardSize.toTop) / StandardSize.BlockWidth;      // 求鼠标点击的Y方向的第几个点位
+
             try
             {
                 Plane plane = new Plane(PlacementX, PlacementY, nowDir);
                 if (!Judger.JudgeLegalPlanePlacement(state.GetLocalPlayer().GetPlanes(), plane))
                 {
                     MessageBox.Show("位置不合法, 请重新放置", "提示");
+                    setForm1Active();
                     return;
                 }
-                
                 state.GetLocalPlayer().SetOnePlane(plane, state.GetLeftCount());
-                
-                form1.setLocalPlane();
-                
+
                 state.SetLeftCount(state.GetLeftCount() + 1);
 
+                form1.setLocalPlane();
+
                 lastX = lastY = -1;
+
                 if (state.GetLeftCount() == 3)
                 {
+                    this.Close();
                     if (state is HumanModeState)
-                    {                        
+                    {
                         //飞机放置完毕后发送至server端
                         string planesStr = "0 ";
 
@@ -146,13 +160,6 @@ namespace PlaneBombGame
 
                         form1.socket.sendStr = planesStr;
 
-                        /*if (form1.isConnected == false)
-                        {
-                            MessageBox.Show("请等待对手放置完Ta的飞机", "提示");
-                            this.Close();
-                            return;
-                        }*/
-
                         if (form1.isEnemySetAllPlanes == false)
                         {
                             MessageBox.Show("请等待对手放置完Ta的飞机", "提示");
@@ -161,31 +168,37 @@ namespace PlaneBombGame
                         }
 
                         MessageBox.Show("对手已经放置完Ta的飞机", "提示");
+                        setForm1Active();
 
                         Plane[] showPlanes = state.GetAdversaryPlayer().GetPlanes();
-                        }
+                    }
                     else
                     {
                         state.GetAdversaryPlayer().SetPlanes(null);
                         Plane[] planes = state.GetAdversaryPlayer().GetPlanes();
-                        Console.WriteLine("对方放置飞机\"(" + planes[0].x + " " + planes[0].y + " ," + planes[0].direction + ") (" 
-                                        + planes[1].x + " " + planes[1].y + " ," + planes[1].direction + ") (" 
+                        Console.WriteLine("对方放置飞机\"(" + planes[0].x + " " + planes[0].y + " ," + planes[0].direction + ") ("
+                                        + planes[1].x + " " + planes[1].y + " ," + planes[1].direction + ") ("
                                         + planes[2].x + " " + planes[2].y + " ," + planes[2].direction + ")"
                                         );
 
                     }
-                    MessageBox.Show("按确认开始对战", "提示");
                     form1.changeLable1Msg("点击右侧方格以攻击对手(点击此处显示提示)");
                     form1.changeLable4Msg("开始进攻 ! ");
-                    this.Close();
+                    setForm1Active();
+                    MessageBox.Show("按确认开始对战", "提示");
                 }
             }
-            catch (Exception) { } // 防止崩溃          
+            catch (Exception) { } // 防止崩溃
         }
 
         private void panel1_MouseMove(object sender, MouseEventArgs e)
         {
-            if(form1.WindowState == FormWindowState.Minimized)
+            if (!form1.isForm1Active())
+            {
+                return;
+            }
+
+            if (form1.WindowState == FormWindowState.Minimized)
             {
                 this.WindowState = FormWindowState.Minimized;
             }

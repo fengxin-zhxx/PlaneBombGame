@@ -11,11 +11,15 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
 using System.Reflection.Emit;
 using System.Security.Policy;
 using System.Timers;
+using PlaneBombGame;
 
 namespace PlaneBombGame
 {
     public partial class Form1 : Form
     {
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetActiveWindow();
+
         public static Form1 form1 = null;
 
         public bool isEnemySetAllPlanes = false;
@@ -53,9 +57,9 @@ namespace PlaneBombGame
 
         private bool clientOrServer;
 
+        private bool hasBeenClicked = false;
+
         //private System.Timers.Timer showPredictTmr = new System.Timers.Timer();
-
-
 
         internal static Form1 getForm1()
         {
@@ -102,7 +106,7 @@ namespace PlaneBombGame
         private void button1_Click(object sender, EventArgs e)
         { 
             BeginNewVirtualModeGame();
-            button2.Enabled = false;
+            if(hasBeenClicked)  button2.Enabled = false;
             button3.Enabled = false;
         }
         
@@ -148,7 +152,7 @@ namespace PlaneBombGame
                 
                 BeginNewHumanModeGame();
                 
-                button2.Enabled = false;
+                if(hasBeenClicked)  button2.Enabled = false;
                 button1.Enabled = false;
                 button3.Enabled = false;
             }
@@ -180,6 +184,8 @@ namespace PlaneBombGame
             button2.Enabled = false;
             button1.Enabled = false;
             button3.Enabled = false;
+
+            hasBeenClicked = true;
         }
 
         private void BeginNewVirtualModeGame()
@@ -266,6 +272,10 @@ namespace PlaneBombGame
                 }*/
             }
             panel3.CreateGraphics().DrawImage(bitmap, 0, 0);
+            if (!isForm1Active())
+            {
+                this.Activate();
+            }
         }
 
         //绘制右侧棋盘
@@ -682,12 +692,20 @@ namespace PlaneBombGame
             else
             {
                 label1.Text = str;  
-            }            
+            }
+            if (!form1.isForm1Active())
+            {
+                form1.Activate();
+            }
         }
-        
+
         public void changeLable4Msg(String str)
         {
             label4.Text = str;
+            if (!form1.isForm1Active())
+            {
+                form1.Activate();
+            }
         }
 
         private void Form1_LocationChanged(object sender, EventArgs e)
@@ -696,6 +714,7 @@ namespace PlaneBombGame
             {
                 movePlaneForm.reSetLocation(this.Location.X + 8, this.Location.Y + 30); 
             }
+
         }
 
         private void panel3_MouseMove(object sender, MouseEventArgs e)
@@ -753,7 +772,17 @@ namespace PlaneBombGame
         public void setLocalPlane()
         {
             state.DrawPlane(panel3.CreateGraphics());
-        }             
+            if (!isForm1Active())
+            {
+                this.Activate();
+            }
+
+        }
+
+        internal bool isForm1Active()
+        {
+            return (GetActiveWindow() == this.Handle);
+        }
 
     }
 }
