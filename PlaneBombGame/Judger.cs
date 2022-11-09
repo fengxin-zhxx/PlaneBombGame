@@ -153,7 +153,8 @@ namespace PlaneBombGame
                                 if (map[i, k] == 0) continue;
                                 vis[i, k] = true;
                                 if (map[i, k] == 1) return false;//MISS
-                                if (i == px + 1 && map[i, k] != 3) return false; // 应该是机头 
+                                if (i == px + 1 && map[i, k] != 3) return false; // 应该是机头
+                                if (i != px + 1 && map[i, k] == 3) return false; // 应该不是机头
                             }
                         }
 
@@ -168,6 +169,7 @@ namespace PlaneBombGame
                                 vis[k, i] = true;
                                 if (map[k, i] == 1) return false;//MISS
                                 if (i == py + 1 && map[k, i] != 3) return false; // 应该是机头 
+                                if (i != py + 1 && map[k, i] == 3) return false; // 应该不是机头 
 
                             }
                         }
@@ -181,6 +183,7 @@ namespace PlaneBombGame
                                 vis[i, k] = true;
                                 if (map[i, k] == 1) return false;//MISS
                                 if (i == px - 1 && map[i, k] != 3) return false; // 应该是机头 
+                                if (i != px - 1 && map[i, k] == 3) return false; // 应该是机头 
                             }
                         }
                         break;
@@ -193,6 +196,7 @@ namespace PlaneBombGame
                                 vis[k, i] = true;
                                 if (map[k, i] == 1) return false;//MISS
                                 if (i == py - 1 && map[k, i] != 3) return false; // 应该是机头 
+                                if (i != py - 1 && map[k, i] == 3) return false; // 应该不是机头
                             }
                         }
                         break;
