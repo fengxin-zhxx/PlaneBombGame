@@ -333,10 +333,10 @@ namespace PlaneBombGame
 
                     AttackPoint attackPoint = new AttackPoint(PlacementX, PlacementY);
 
-                    state.GetLocalPlayer().AddAttackPoint(attackPoint); // 新的攻击点加入历史记录
+                    string localRes = state.DrawLastPoint(attackPoint, state.GetAdversaryPlayer(), panel4.CreateGraphics());
+                    state.GetLocalPlayer().AddAttackPoint(attackPoint, localRes); // 新的攻击点加入历史记录
 
-                    state.DrawLastPoint(attackPoint, state.GetAdversaryPlayer(), panel4.CreateGraphics());
-
+                    
                     if (state is HumanModeState)
                     {
                         string chessDownStr = "1" + " " + PlacementX + " " + PlacementY + " " + chessDownCount;
@@ -373,8 +373,15 @@ namespace PlaneBombGame
                         AttackPoint a = player.NextAttack();
                         string showMsgStr = "对方落子 : " + a.x + " " + a.y + "，请您行棋";
                         label4.Text = showMsgStr;
-                        string res = state.DrawLastPoint(a, state.GetLocalPlayer(), panel3.CreateGraphics());
-                        player.AddAttackPoint(a, res);
+                        string adRes = state.DrawLastPoint(a, state.GetLocalPlayer(), panel3.CreateGraphics());
+                        player.AddAttackPoint(a, adRes);
+
+                        Console.WriteLine("您的落子:(" + PlacementX + " ," + PlacementY + ") , 您的胜率:" +
+                                    state.GetLocalPlayer().
+                                    GetAiAssistantPlayer().
+                                    GetCurrentWinRate(state.GetAdversaryPlayer()));
+                        Console.WriteLine("AI落子:(" + a.x + " ," +  a.y + ") , AI胜率:" +
+                                    ((AiVirtualPlayer)player).GetCurrentWinRate(state.GetLocalPlayer()));
                         if (Judger.JudgePlayerWin(state.GetAdversaryPlayer(),state.GetLocalPlayer()))
                         {
                             state.DrawPlane(panel4.CreateGraphics(), false);
@@ -386,6 +393,8 @@ namespace PlaneBombGame
                             button3.Enabled = true;//允许进行AI自动对战
                             return;
                         }
+                        AttackPoint atk = state.GetLocalPlayer().GetAiAssistantPlayer().NextAttack();
+                        Console.WriteLine("AI预测下一步攻击点为(" + atk.x + " ," + atk.y + ")");
                     }
                 }
                 catch (Exception) { }
@@ -501,8 +510,11 @@ namespace PlaneBombGame
                             int chessDownY = int.Parse(words[2]);
                             int enemyChessDownCount = int.Parse(words[3]);
                             AttackPoint attackPoint = new AttackPoint(chessDownX, chessDownY);
+                            //绘制棋盘
+                            string res = state.DrawLastPoint(attackPoint, state.GetLocalPlayer(), panel3.CreateGraphics());
+
                             //加入对手落子历史
-                            state.GetAdversaryPlayer().AddAttackPoint(attackPoint);                           
+                            state.GetAdversaryPlayer().AddAttackPoint(attackPoint,res);                           
                             //判断胜负
                             if (Judger.JudgePlayerWin(state.GetAdversaryPlayer(), state.GetLocalPlayer()))
                             {
@@ -535,8 +547,6 @@ namespace PlaneBombGame
                                     string showMsgStr = "对方落子 : " + attackPoint.x + " " + attackPoint.y + "，请您行棋";
                                     this.label4.Invoke(actionDelegate, showMsgStr);
                                 }
-                                //绘制棋盘
-                                state.DrawLastPoint(attackPoint, state.GetLocalPlayer(), panel3.CreateGraphics());
                                 //允许下棋
                                 whoseTurn = true;
                             }

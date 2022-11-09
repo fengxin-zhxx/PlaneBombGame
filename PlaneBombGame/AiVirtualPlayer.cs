@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Deployment.Application;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace PlaneBombGame
         ArrayList attackHistory = new ArrayList();
         Random r = new Random(); // 以当前时间为随机数种子
 
-        ArrayList VectorStore = new ArrayList();
+        ArrayList vectorStore = null;
         int[,] nowMap = new int[11, 11];
         int[,] nowCnt = new int[11, 11];
         int[,] nowHeadCnt = new int[11, 11];
@@ -39,7 +40,7 @@ namespace PlaneBombGame
                 {
                     planes[i] = new Plane(X[i], Y[i], D[i]);
                 }
-                VectorStore.Add(planes);
+                vectorStore.Add(planes);
                 return;
             }
             if (x == 10) return;
@@ -71,18 +72,11 @@ namespace PlaneBombGame
         {
             //for (int i = 0; i < 3; i++) D[i] = -1;
             //DFS(1, 1);
-            string str = global::PlaneBombGame.Properties.Resources.All;
-            string[] lines = str.Split('\n');
-            foreach(string line in lines)
-            {
-                string[] strs = line.Split(' ');
-                if (strs.Length != 9) continue;
-                int[] nums = Array.ConvertAll<string, int>(strs, s => int.Parse(s));
-                Plane[] planes = new Plane[] { new Plane(nums[0], nums[1], nums[2]), new Plane(nums[3], nums[4], nums[5]), new Plane(nums[6], nums[7], nums[8]) };
-                VectorStore.Add(planes);
-            }
+            vectorStore = Utils.GetAllLegalPlacement();
+            
         }
-        public AttackPoint NextAttack()
+
+        private void UpdateInfo()
         {
             int cnt = attackHistory.Count;
             ArrayList ResVector = new ArrayList();
@@ -90,7 +84,7 @@ namespace PlaneBombGame
 
             Utils.ClearInts(nowCnt, 10, 10);
             Utils.ClearInts(nowHeadCnt, 10, 10);
-            foreach(Plane[] vectorPlanes in VectorStore)
+            foreach (Plane[] vectorPlanes in vectorStore)
             {
                 if (Judger.JudgeLegalPlanePlacement(nowMap, vectorPlanes)) // 如果当前方案符合
                 {
@@ -99,11 +93,16 @@ namespace PlaneBombGame
                     Utils.AddPlanesHeadsOnMap(nowHeadCnt, vectorPlanes);
                 }
             }
-            VectorStore = ResVector;
-            int count = VectorStore.Count;
+
+            vectorStore = ResVector;
+        }
+        public AttackPoint NextAttack()
+        {
+            UpdateInfo();
+            int count = vectorStore.Count;
             if(count == 1)
             {
-                AttackPoint[] atks = Utils.GetPlanesHeads((Plane[])VectorStore[0]);
+                AttackPoint[] atks = Utils.GetPlanesHeads((Plane[])vectorStore[0]);
                 foreach(AttackPoint atk in atks)
                 {
                     if (nowMap[atk.x, atk.y] == 0)
@@ -115,7 +114,7 @@ namespace PlaneBombGame
             }
             else
             {
-                int[] res = Utils.FindBest(nowCnt, nowHeadCnt, VectorStore.Count);
+                int[] res = Utils.FindBest(nowCnt, nowHeadCnt, vectorStore.Count);
                 return new AttackPoint(res[0], res[1]);
             }
         }
@@ -171,6 +170,23 @@ namespace PlaneBombGame
                 res[i] = plane;
             }
             return res;
+        }
+
+        
+        public AiVirtualPlayer GetAiAssistantPlayer()
+        {
+            return this;
+        }
+
+        public int GetCurrentLegalCount()
+        {
+            return vectorStore.Count;
+        }
+        public double GetCurrentWinRate(Player adversaryPlayer)
+        {
+            int currentNums = GetCurrentLegalCount();
+            int adversaryNums = adversaryPlayer.GetAiAssistantPlayer().GetCurrentLegalCount();
+            return 1.0 * adversaryNums / (adversaryNums + currentNums);
         }
     }
 }

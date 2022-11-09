@@ -147,5 +147,22 @@ namespace PlaneBombGame
             }
             return result;
         }
+        
+        //从资源中读取所有可行的摆放方案
+        internal static ArrayList GetAllLegalPlacement()
+        {
+            ArrayList al = new ArrayList();
+            string str = global::PlaneBombGame.Properties.Resources.All;
+            string[] lines = str.Split('\n');
+            foreach (string line in lines)
+            {
+                string[] strs = line.Split(' ');
+                if (strs.Length != 9) continue;
+                int[] nums = Array.ConvertAll<string, int>(strs, s => int.Parse(s));
+                Plane[] planes = new Plane[] { new Plane(nums[0], nums[1], nums[2]), new Plane(nums[3], nums[4], nums[5]), new Plane(nums[6], nums[7], nums[8]) };
+                al.Add(planes);
+            }
+            return al;
+        }
     }
 }

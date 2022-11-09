@@ -23,7 +23,7 @@ namespace PlaneBombGame
         //绘画player的攻击点, 以adversaryPlayer的Planes为结果判断依据
 
         string DrawLastPoint(AttackPoint a, Player adversaryPlayer, Graphics g);
-        //绘画player的攻击点, 以adversaryPlayer的Planes为结果判断依据, 并返回攻击的结果
+        //绘画攻击点a, 以adversaryPlayer的Planes为结果判断依据, 并返回攻击的结果
 
         void DrawPlane(Graphics g);
         // 绘画LocalPlayer放置的飞机

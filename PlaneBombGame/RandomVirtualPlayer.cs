@@ -59,5 +59,10 @@ namespace PlaneBombGame
         {
             throw new NotImplementedException();
         }
+
+        public AiVirtualPlayer GetAiAssistantPlayer()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

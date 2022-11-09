@@ -18,6 +18,9 @@ namespace PlaneBombGame
         bool preViewPlaneIsValidPlace;
         bool flashLight = false;
 
+        AiAssistant aiAssistant = new AiAssistant();
+
+
         ArrayList attackHistory = new ArrayList();
         public ArrayList GetAttackHistory()
         {
@@ -70,9 +73,10 @@ namespace PlaneBombGame
             planes[index] = plane;
         }
 
-        public void AddAttackPoint(AttackPoint attackPoint, string res = "")
+        public void AddAttackPoint(AttackPoint attackPoint, string res)
         {
             attackHistory.Add(attackPoint); 
+            aiAssistant.AddAttackPoint(attackPoint, res);//向AI助手传送
         }
 
 
@@ -89,5 +93,17 @@ namespace PlaneBombGame
         {
             previewPlane.Draw(g, true, preViewPlaneIsValidPlace, flashLight);
         }
+
+        internal AiAssistant GetAiAssistant()
+        {
+            return aiAssistant;
+        }
+
+        public AiVirtualPlayer GetAiAssistantPlayer()
+        {
+            return aiAssistant.GetAiVirtualPlayer();
+        }
+
+        
     }
 }
