@@ -106,11 +106,20 @@ namespace PlaneBombGame
                     headCnt = HeadCnt[i, j];
                     emptyCnt = count - HitCnt[i, j];
                     long delta = CalculateValue(hitCnt, headCnt, emptyCnt);
-                    if (delta > Max)
+                    if (delta > Max && 1.0 * (Math.Abs(delta - Max)) / Max > 0.05)
                     {
                         bx = i;
                         by = j;
                         Max = delta;
+                    }
+                    else if (1.0 * (Math.Abs(delta - Max)) / Max <= 0.05)
+                    {
+                        if (HeadCnt[i,j] > HeadCnt[bx,by])
+                        {
+                            bx = i;
+                            by = j;
+                            Max = delta;
+                        }
                     }
                 }
             }
